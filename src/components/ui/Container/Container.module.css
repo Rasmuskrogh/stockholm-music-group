@@ -1,0 +1,6 @@
+/* Container.module.css */
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 7vh 5vw;
+}
