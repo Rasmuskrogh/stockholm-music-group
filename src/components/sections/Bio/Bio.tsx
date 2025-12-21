@@ -7,7 +7,7 @@ function Bio() {
   return (
     <Section>
       <Container>
-        <h2>Biografi</h2>
+        <h2 className={styles.title}>Biografi</h2>
         <p className={styles.text}>
           Stockholm Music Group är en stilren och mångsidig covertrio från
           Stockholm som specialiserar sig på att tolka klassiker ur pop-, rock-,

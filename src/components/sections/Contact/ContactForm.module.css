@@ -20,6 +20,7 @@
   border: white 1px;
   border-style: none none solid none;
   height: 3.1rem;
+  color: white;
 }
 
 /* Knapp border radius */
@@ -59,7 +60,6 @@
 .input {
   width: 100%;
   padding: 0.75rem;
-  color: #000000;
   transition: border-color 0.15s ease-in-out;
 }
 
@@ -70,20 +70,19 @@
 
 .input:focus {
   outline: none;
-  border-color: #000000;
+  border-color: white;
 }
 
 .textarea {
   width: 100%;
   padding: 0.75rem;
-  color: #000000;
   resize: none;
   transition: border-color 0.15s ease-in-out;
 }
 
 .textarea:focus {
   outline: none;
-  border-color: #000000;
+  border-color: white;
 }
 
 /* ===== KNAPPAR ===== */
