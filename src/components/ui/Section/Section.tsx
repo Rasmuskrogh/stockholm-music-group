@@ -1,9 +1,5 @@
 import styles from "./Section.module.css";
-
-type SectionProps = {
-  id?: string;
-  children: React.ReactNode;
-};
+import { SectionProps } from "@/types";
 
 export default function Section({ id, children }: SectionProps) {
   return (

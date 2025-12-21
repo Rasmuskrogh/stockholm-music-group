@@ -15,6 +15,13 @@ function Hero() {
             fill
           />
         </figure>
+        <Image
+          className={styles.logo}
+          src="/images/SMGLogo.svg"
+          alt="Logo"
+          width={150}
+          height={150}
+        />
       </div>
     </Section>
   );

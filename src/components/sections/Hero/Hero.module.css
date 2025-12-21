@@ -1,3 +1,7 @@
+.heroWrapper {
+  position: relative;
+}
+
 .heroImageWrapper {
   height: 100vh;
   position: relative;
@@ -6,4 +10,11 @@
 .heroImage {
   object-fit: cover;
   object-position: center 15%;
+}
+
+.logo {
+  width: 15rem;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }

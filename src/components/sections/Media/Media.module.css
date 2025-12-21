@@ -1,0 +1,13 @@
+.iconsWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding-top: 3rem;
+}
+
+.icons {
+  width: 2rem;
+  height: 2rem;
+}
