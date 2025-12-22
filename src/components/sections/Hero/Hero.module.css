@@ -1,3 +1,7 @@
+.transparentSection {
+  background-color: transparent !important;
+}
+
 .heroWrapper {
   position: relative;
 }

@@ -34,7 +34,7 @@ const videos = [
 
 function Media() {
   return (
-    <Section>
+    <Section className={styles.transparentSection}>
       <Container>
         <h2 className={styles.title}>Media</h2>
         <section className={styles.iconsWrapper}>

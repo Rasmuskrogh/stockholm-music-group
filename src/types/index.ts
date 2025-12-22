@@ -7,4 +7,5 @@ export interface VideoCardProps {
 export type SectionProps = {
   id?: string;
   children: React.ReactNode;
+  className?: string;
 };

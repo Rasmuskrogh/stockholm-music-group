@@ -12,9 +12,13 @@
   height: 2rem;
 }
 
+.transparentSection {
+  background-color: transparent !important;
+}
+
 .videoSection {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   padding-top: 3rem;
 }
