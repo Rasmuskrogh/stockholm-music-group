@@ -9,3 +9,11 @@ export type SectionProps = {
   children: React.ReactNode;
   className?: string;
 };
+
+export interface GalleryImage {
+  id: string;
+  url: string;
+  alt: string;
+  width: number;
+  height: number;
+}

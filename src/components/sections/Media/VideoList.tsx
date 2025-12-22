@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Image from "next/image";
 import styles from "./VideoList.module.css";
 import { VideoCardProps } from "@/types";
 import { createPortal } from "react-dom";
@@ -14,7 +15,14 @@ function VideoList({ composer, title, youtubeId }: VideoCardProps) {
     <>
       <div className={styles.videoCard}>
         <div className={styles.videoWrapper} onClick={() => setOpen(true)}>
-          <img src={thumbnailUrl} alt={title} className={styles.thumbnail} />
+          <Image
+            src={thumbnailUrl}
+            alt={title}
+            width={640}
+            height={360}
+            className={styles.thumbnail}
+            unoptimized
+          />
           <span className={styles.playButton}>▶</span>
         </div>
 

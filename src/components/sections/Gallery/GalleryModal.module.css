@@ -1,0 +1,229 @@
+/* ===== MODAL OVERLAY ===== */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== MODAL CONTENT ===== */
+.modalContent {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== CLOSE BUTTON ===== */
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  z-index: 1001;
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* ===== NAVIGATION BUTTONS ===== */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 3rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  z-index: 1001;
+}
+
+.navButtonLeft {
+  left: -75px;
+}
+
+.navButtonRight {
+  right: -75px;
+}
+
+.navIconLeft {
+  position: relative;
+  top: -1px;
+  left: -2px;
+}
+
+.navIconRight {
+  position: relative;
+  top: -1px;
+  right: -2px;
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== IMAGE CONTAINER ===== */
+.imageContainer {
+  position: relative;
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalImage {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== IMAGE INFO ===== */
+.imageInfo {
+  position: absolute;
+  bottom: -80px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: white;
+}
+
+.imageTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+}
+
+.imageCounter {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin: 0;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (width < 980px) {
+  .closeButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+  }
+
+  .navButtonLeft {
+    left: 15px;
+  }
+  .navButtonRight {
+    right: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
+  .closeButton {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .navButton {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
+
+  .navButtonLeft {
+    left: -80px;
+  }
+
+  .navButtonRight {
+    right: -80px;
+  }
+
+  .modalImage {
+    max-height: 70vh;
+  }
+
+  .imageInfo {
+    bottom: -50px;
+  }
+
+  .imageTitle {
+    font-size: 1rem;
+  }
+
+  .imageCounter {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navButtonLeft {
+    left: -60px;
+  }
+
+  .navButtonRight {
+    right: -60px;
+  }
+
+  .modalImage {
+    max-height: 60vh;
+  }
+}

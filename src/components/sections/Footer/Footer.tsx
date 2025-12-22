@@ -1,5 +1,4 @@
 import Section from "@/components/ui/Section/Section";
-import Container from "@/components/ui/Container/Container";
 import Link from "next/link";
 
 import styles from "./Footer.module.css";
