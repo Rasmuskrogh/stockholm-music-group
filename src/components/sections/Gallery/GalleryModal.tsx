@@ -30,9 +30,6 @@ export default function GalleryModal({
   const currentImage = images[currentIndex];
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const [swipeOffset, setSwipeOffset] = useState(0);
-  const [isSwiping, setIsSwiping] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -88,61 +85,25 @@ export default function GalleryModal({
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
-    setIsSwiping(true);
-    setSwipeOffset(0);
   };
 
   const onTouchMove = (e: React.TouchEvent) => {
-    if (touchStart === null) return;
-    const currentX = e.targetTouches[0].clientX;
-    const offset = currentX - touchStart;
-    setSwipeOffset(offset);
-    setTouchEnd(currentX);
+    setTouchEnd(e.targetTouches[0].clientX);
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || touchEnd === null) {
-      setIsSwiping(false);
-      setSwipeOffset(0);
-      return;
-    }
+    if (!touchStart || !touchEnd) return;
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
-    const screenWidth =
-      typeof window !== "undefined" ? window.innerWidth : 1000;
 
     if (isLeftSwipe) {
-      setIsAnimating(true);
-      setSwipeOffset(-screenWidth);
-      setTimeout(() => {
-        goToNext();
-        setSwipeOffset(0);
-        setIsSwiping(false);
-        setIsAnimating(false);
-      }, 300);
-    } else if (isRightSwipe) {
-      setIsAnimating(true);
-      setSwipeOffset(screenWidth);
-      setTimeout(() => {
-        goToPrevious();
-        setSwipeOffset(0);
-        setIsSwiping(false);
-        setIsAnimating(false);
-      }, 300);
-    } else {
-      // Reset om swipe inte var tillräckligt lång
-      setIsAnimating(true);
-      setSwipeOffset(0);
-      setTimeout(() => {
-        setIsSwiping(false);
-        setIsAnimating(false);
-      }, 200);
+      goToNext();
     }
-
-    setTouchStart(null);
-    setTouchEnd(null);
+    if (isRightSwipe) {
+      goToPrevious();
+    }
   };
 
   return (
@@ -182,96 +143,14 @@ export default function GalleryModal({
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
-          {/* Föregående bild (visas när man swipear höger) */}
-          {swipeOffset > 0 && (
-            <div
-              className={`${styles.imageWrapper} ${
-                isAnimating ? styles.animating : ""
-              }`}
-              style={{
-                transform: `translateX(${
-                  swipeOffset -
-                  (typeof window !== "undefined" ? window.innerWidth : 1000)
-                }px)`,
-                opacity: Math.min(Math.abs(swipeOffset) / 200, 1),
-                transition: isAnimating
-                  ? "transform 0.3s ease-out, opacity 0.3s ease-out"
-                  : "none",
-              }}
-            >
-              <Image
-                src={
-                  images[(currentIndex - 1 + images.length) % images.length].url
-                }
-                alt={
-                  images[(currentIndex - 1 + images.length) % images.length].alt
-                }
-                width={
-                  images[(currentIndex - 1 + images.length) % images.length]
-                    .width
-                }
-                height={
-                  images[(currentIndex - 1 + images.length) % images.length]
-                    .height
-                }
-                className={styles.modalImage}
-                priority
-              />
-            </div>
-          )}
-
-          {/* Nuvarande bild */}
-          <div
-            className={`${styles.imageWrapper} ${
-              isAnimating ? styles.animating : ""
-            }`}
-            style={{
-              transform: `translateX(${swipeOffset}px)`,
-              opacity: isSwiping
-                ? 1 - Math.min(Math.abs(swipeOffset) / 300, 0.7)
-                : 1,
-              transition: isAnimating
-                ? "transform 0.3s ease-out, opacity 0.3s ease-out"
-                : "none",
-            }}
-          >
-            <Image
-              src={currentImage.url}
-              alt={currentImage.alt}
-              width={currentImage.width}
-              height={currentImage.height}
-              className={styles.modalImage}
-              priority
-            />
-          </div>
-
-          {/* Nästa bild (visas när man swipear vänster) */}
-          {swipeOffset < 0 && (
-            <div
-              className={`${styles.imageWrapper} ${
-                isAnimating ? styles.animating : ""
-              }`}
-              style={{
-                transform: `translateX(${
-                  swipeOffset +
-                  (typeof window !== "undefined" ? window.innerWidth : 1000)
-                }px)`,
-                opacity: Math.min(Math.abs(swipeOffset) / 200, 1),
-                transition: isAnimating
-                  ? "transform 0.3s ease-out, opacity 0.3s ease-out"
-                  : "none",
-              }}
-            >
-              <Image
-                src={images[(currentIndex + 1) % images.length].url}
-                alt={images[(currentIndex + 1) % images.length].alt}
-                width={images[(currentIndex + 1) % images.length].width}
-                height={images[(currentIndex + 1) % images.length].height}
-                className={styles.modalImage}
-                priority
-              />
-            </div>
-          )}
+          <Image
+            src={currentImage.url}
+            alt={currentImage.alt}
+            width={currentImage.width}
+            height={currentImage.height}
+            className={styles.modalImage}
+            priority
+          />
         </div>
 
         <button
