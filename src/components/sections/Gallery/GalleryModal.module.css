@@ -120,6 +120,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: pan-y pinch-zoom;
 }
 
 .modalImage {

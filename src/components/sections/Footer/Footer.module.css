@@ -27,3 +27,21 @@
   color: white;
   text-decoration: none;
 }
+
+@media (width < 1196px) {
+  .footerContent {
+    justify-content: space-between;
+  }
+  .spacer {
+    display: none;
+  }
+  .copyright {
+    padding-left: 3rem;
+    flex: unset;
+    text-align: left;
+  }
+  .madeBy {
+    flex: unset;
+    text-align: right;
+  }
+}
