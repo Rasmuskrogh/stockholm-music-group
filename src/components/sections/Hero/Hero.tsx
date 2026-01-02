@@ -20,7 +20,7 @@ function Hero() {
           src="/images/SMGLogo.svg"
           alt="Logo"
           width={150}
-          height={150}
+          height={300}
         />
       </div>
     </Section>

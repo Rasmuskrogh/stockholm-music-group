@@ -17,8 +17,9 @@
 }
 
 .logo {
-  width: 15rem;
+  width: 30rem;
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -12rem;
+  transform: translate(-50%, -50%);
+  left: 50%;
 }
