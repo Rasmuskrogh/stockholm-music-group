@@ -8,11 +8,19 @@ function Hero() {
     <Section>
       <div className={styles.heroWrapper}>
         <figure className={styles.heroImageWrapper}>
-          <Image
+          {/* <Image
             className={styles.heroImage}
             src="/images/placeholder2.jpg"
             alt="Hero"
             fill
+          /> */}
+          <video
+            className={styles.heroVideo}
+            src="/videos/hero.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
           />
         </figure>
         <Image

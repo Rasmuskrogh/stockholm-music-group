@@ -45,3 +45,9 @@
     text-align: right;
   }
 }
+
+@media (width <770px) {
+  .footerContent {
+    flex-direction: column;
+  }
+}
