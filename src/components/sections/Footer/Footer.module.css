@@ -51,8 +51,9 @@
     flex-direction: column;
     gap: 2px;
   }
+  .madeBy,
   .copyright {
-    padding-left: 0;
+    padding: 0;
   }
 }
 
