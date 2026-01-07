@@ -56,3 +56,9 @@
   height: 100%;
   border: 0;
 }
+
+@media (width < 570px) {
+  .videoInfo {
+    flex-direction: column;
+  }
+}
