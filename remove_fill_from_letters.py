@@ -30,3 +30,4 @@ with open('public/images/SMGLogo.svg', 'w', encoding='utf-8') as f:
 
 print("Removed fill colors from path elements (made them transparent)")
 
+

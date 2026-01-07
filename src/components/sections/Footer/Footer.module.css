@@ -49,5 +49,11 @@
 @media (width <770px) {
   .footerContent {
     flex-direction: column;
+    gap: 2px;
+    /* justify-content: center;
+    align-items: center; */
+  }
+  .copyright {
+    padding-left: 0;
   }
 }

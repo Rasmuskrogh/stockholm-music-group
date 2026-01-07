@@ -11,6 +11,18 @@
   position: relative;
 }
 
+.heroImageWrapper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .heroImage {
   object-fit: cover;
   object-position: center 15%;
@@ -24,9 +36,11 @@
 }
 
 .logo {
-  width: 30rem;
+  width: 40rem;
+  height: 28.75rem;
   position: absolute;
-  bottom: -12rem;
+  bottom: -23rem;
   transform: translate(-50%, -50%);
   left: 50%;
+  z-index: 2;
 }
