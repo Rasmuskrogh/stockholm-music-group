@@ -21,8 +21,8 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   font-family: "Montserrat", sans-serif;
-  background-color: #000;
-  color: #fff;
+  background-color: #fdfdf5;
+  color: #c89e68;
   min-height: 100vh;
   width: 100%;
   position: relative;
