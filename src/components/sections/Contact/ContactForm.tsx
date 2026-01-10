@@ -56,7 +56,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Your name *"
+            placeholder="Ditt namn *"
           />
         </label>
 
@@ -69,7 +69,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Your email *"
+            placeholder="Din e-post *"
           />
         </label>
         {/* <label className={styles.label}>
@@ -92,7 +92,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.textarea}
-            placeholder="Your message *"
+            placeholder="Ditt meddelande *"
           ></textarea>
         </label>
 
@@ -101,18 +101,19 @@ export default function ContactForm() {
           disabled={status === "submitting"}
           className={styles.submitButton}
         >
-          {status === "submitting" ? "Sending..." : "Send"}
+          {status === "submitting" ? "Skickar..." : "Skicka"}
         </button>
 
         {status === "success" && (
           <div className={styles.successMessage}>
-            Thank you! Your message has been sent successfully.
+            Tack! Ditt meddelande har skickats.
           </div>
         )}
 
         {status === "error" && (
           <div className={styles.errorMessage}>
-            Sorry, there was an error sending your message. Please try again.
+            Jag ber om ursäkt, det blev ett fel när ditt meddelande skulle
+            skickas. Vänligen forsök igen.
           </div>
         )}
       </form>

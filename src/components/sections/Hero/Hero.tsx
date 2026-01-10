@@ -2,6 +2,7 @@ import Section from "@/components/ui/Section/Section";
 import Image from "next/image";
 
 import styles from "./Hero.module.css";
+import Link from "next/link";
 
 function Hero() {
   return (
@@ -30,6 +31,9 @@ function Hero() {
           width={150}
           height={300}
         />
+        <Link className={styles.cta} href="/">
+          CTA
+        </Link>
       </div>
     </Section>
   );

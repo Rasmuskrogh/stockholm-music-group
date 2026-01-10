@@ -8,7 +8,7 @@ function Contact() {
   return (
     <Section>
       <Container>
-        <h2>Kontakt</h2>
+        <h2>Boka oss</h2>
         <ContactForm />
       </Container>
     </Section>

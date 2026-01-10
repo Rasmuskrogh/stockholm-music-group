@@ -102,7 +102,7 @@ export default function Gallery() {
     <Section>
       <Container>
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>Gallery</h2>
+          <h2 className={styles.sectionTitle}>Galleri</h2>
           <div className={styles.galleryGrid}>
             {images.length > 0 ? (
               images.map((image, index) => (
