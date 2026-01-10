@@ -12,6 +12,17 @@
   height: 2rem;
 }
 
+.iconLink {
+  display: inline-block;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.iconLink:hover {
+  transform: scale(1.2);
+  opacity: 0.8;
+}
+
 .transparentSection {
   background-color: transparent !important;
 }

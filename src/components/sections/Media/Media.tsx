@@ -1,6 +1,7 @@
 import Container from "@/components/ui/Container/Container";
 import Section from "@/components/ui/Section/Section";
 import Image from "next/image";
+import Link from "next/link";
 import VideoList from "./VideoList";
 
 import styles from "./Media.module.css";
@@ -38,24 +39,45 @@ function Media() {
       <Container>
         <h2 className={styles.title}>Media</h2>
         <section className={styles.iconsWrapper}>
-          <Image
-            src="/images/youtube.svg"
-            alt="YouTube"
-            width={30}
-            height={30}
-          />
-          <Image
-            src="/images/instagram.svg"
-            alt="Instagram"
-            width={30}
-            height={30}
-          />
-          <Image
-            src="/images/facebook.svg"
-            alt="Facebook"
-            width={30}
-            height={30}
-          />
+          <Link
+            href="https://www.youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.iconLink}
+          >
+            <Image
+              src="/images/youtube.svg"
+              alt="YouTube"
+              width={30}
+              height={30}
+            />
+          </Link>
+          <Link
+            href="https://www.instagram.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.iconLink}
+          >
+            <Image
+              src="/images/instagram.svg"
+              alt="Instagram"
+              width={30}
+              height={30}
+            />
+          </Link>
+          <Link
+            href="https://www.facebook.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.iconLink}
+          >
+            <Image
+              src="/images/facebook.svg"
+              alt="Facebook"
+              width={30}
+              height={30}
+            />
+          </Link>
         </section>
         <section className={styles.videoSection}>
           {videos.map((video) => (

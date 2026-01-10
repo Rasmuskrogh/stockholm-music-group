@@ -64,6 +64,13 @@
   width: 100%;
   object-fit: cover;
   object-position: center;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.galleryImage:hover {
+  transform: scale(1.05);
+  opacity: 0.9;
 }
 
 /* Stående bilder (portrait) - croppa från botten (behåll toppen) */
