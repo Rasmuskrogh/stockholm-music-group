@@ -1,3 +1,5 @@
+"use client";
+
 import Section from "@/components/ui/Section/Section";
 import Image from "next/image";
 
@@ -5,6 +7,14 @@ import styles from "./Hero.module.css";
 import Link from "next/link";
 
 function Hero() {
+  const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const contactElement = document.getElementById("contact");
+    if (contactElement) {
+      contactElement.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <Section>
       <div className={styles.heroWrapper}>
@@ -35,8 +45,8 @@ function Hero() {
           width={150}
           height={300}
         /> */}
-        <Link className={styles.cta} href="#contact">
-          BOKA OSS
+        <Link className={styles.cta} href="#contact" onClick={handleScrollToContact}>
+          <strong>BOKA OSS</strong>
         </Link>
       </div>
     </Section>

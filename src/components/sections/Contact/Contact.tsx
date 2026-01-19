@@ -6,7 +6,7 @@ import ContactForm from "./ContactForm";
 
 function Contact() {
   return (
-    <Section>
+    <Section id="contact">
       <Container>
         <h2>Boka oss</h2>
         <ContactForm />
