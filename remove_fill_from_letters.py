@@ -32,3 +32,4 @@ print("Removed fill colors from path elements (made them transparent)")
 
 
 
+

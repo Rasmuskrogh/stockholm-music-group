@@ -11,8 +11,8 @@ function page() {
       <Hero />
       <Bio />
       <Media />
-      <Gallery />
       <Contact />
+      <Gallery />
       <Footer />
     </div>
   );

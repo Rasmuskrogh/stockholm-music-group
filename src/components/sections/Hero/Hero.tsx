@@ -24,15 +24,19 @@ function Hero() {
             playsInline
           />
         </figure>
-        <Image
+        <div>
+        <h1>Stockholm</h1>
+        <h3>Music Group</h3>
+        </div>
+        {/* <Image
           className={styles.logo}
           src="/images/SMGLogo.svg"
           alt="Logo"
           width={150}
           height={300}
-        />
+        /> */}
         <Link className={styles.cta} href="/">
-          CTA
+          BOKA OSS
         </Link>
       </div>
     </Section>
