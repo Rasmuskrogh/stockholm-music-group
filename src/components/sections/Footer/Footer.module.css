@@ -1,3 +1,31 @@
+.footerContact {
+  padding: 0 0 3rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  justify-content: center;
+}
+
+.footerContact span {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+}
+
+.footerContact span a {
+    text-decoration: none;
+  color: white;
+}
+
+.footerContact span img {
+  display: block;
+  filter: brightness(0) invert(1);
+  align-self: center;
+  height: 30px;
+  width: 30px;
+}
+
 .footerContent {
   display: flex;
   align-items: center;
