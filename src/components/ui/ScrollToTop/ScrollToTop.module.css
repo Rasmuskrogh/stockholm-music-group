@@ -1,0 +1,45 @@
+.scrollToTop {
+  position: fixed;
+  bottom: max(2rem, env(safe-area-inset-bottom));
+  right: 2rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+.scrollToTop:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.scrollToTop img {
+  filter: brightness(0) invert(1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .scrollToTop {
+    bottom: max(2rem, env(safe-area-inset-bottom));
+    right: 1rem;
+    width: 45px;
+    height: 45px;
+  }
+}

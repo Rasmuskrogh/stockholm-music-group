@@ -4,6 +4,7 @@ import Contact from "@/components/sections/Contact/Contact";
 import Footer from "@/components/sections/Footer/Footer";
 import Media from "@/components/sections/Media/Media";
 import Gallery from "@/components/sections/Gallery/Gallery";
+import ScrollToTop from "@/components/ui/ScrollToTop/ScrollToTop";
 
 function page() {
   return (
@@ -14,6 +15,7 @@ function page() {
       <Contact />
       <Gallery />
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }
