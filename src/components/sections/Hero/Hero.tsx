@@ -19,12 +19,6 @@ function Hero() {
     <Section>
       <div className={styles.heroWrapper}>
         <figure className={styles.heroImageWrapper}>
-          {/* <Image
-            className={styles.heroImage}
-            src="/images/placeholder2.jpg"
-            alt="Hero"
-            fill
-          /> */}
           <video
             className={styles.heroVideo}
             src="/videos/hero.mp4"
@@ -35,16 +29,9 @@ function Hero() {
           />
         </figure>
         <div className={styles.heroText}>
-        <h1 className={styles.heroTitle}>Stockholm</h1>
-        <h3 className={styles.heroSubtitle}>Music Group</h3>
+          <h1 className={styles.heroTitle}>Stockholm</h1>
+          <h2 className={styles.heroSubtitle}>Music Group</h2>
         </div>
-        {/* <Image
-          className={styles.logo}
-          src="/images/SMGLogo.svg"
-          alt="Logo"
-          width={150}
-          height={300}
-        /> */}
         <Link className={styles.cta} href="#contact" onClick={handleScrollToContact}>
           <strong>BOKA OSS</strong>
         </Link>

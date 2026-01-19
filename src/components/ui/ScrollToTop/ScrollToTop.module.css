@@ -1,6 +1,6 @@
 .scrollToTop {
   position: fixed;
-  bottom: max(2rem, env(safe-area-inset-bottom));
+  bottom: max(3rem, env(safe-area-inset-bottom));
   right: 2rem;
   background: rgba(0, 0, 0, 0.7);
   border: 2px solid white;
@@ -12,7 +12,7 @@
   justify-content: center;
   cursor: pointer;
   z-index: 1000;
-  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease, opacity 0.3s ease, bottom 0.2s ease;
   opacity: 0;
   animation: fadeIn 0.3s ease forwards;
 }
@@ -41,5 +41,11 @@
     right: 1rem;
     width: 45px;
     height: 45px;
+  }
+}
+
+@media (max-width: 500px) {
+  .scrollToTop.nearBottom {
+    bottom: 5rem;
   }
 }
