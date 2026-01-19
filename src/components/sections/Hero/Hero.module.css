@@ -35,15 +35,31 @@
   object-position: center 15%;
 }
 
-.logo {
-  width: 40rem;
-  height: 28.75rem;
+
+.heroText {
   position: absolute;
-  bottom: -23rem;
-  transform: translate(-50%, -50%);
+  font-family: "Playfair", serif;
+  font-weight: 200;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  text-align: center;
+  bottom: -1rem;
   left: 50%;
-  z-index: 2;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-transform: uppercase;
 }
+
+.heroTitle {
+  margin-bottom: 0;
+  font-weight: 200;
+}
+
+.heroSubtitle {
+  margin-top: 0;
+  font-weight: 200;
+}
+
 
 .cta {
   border: none;

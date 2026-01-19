@@ -24,9 +24,9 @@ function Hero() {
             playsInline
           />
         </figure>
-        <div>
-        <h1>Stockholm</h1>
-        <h3>Music Group</h3>
+        <div className={styles.heroText}>
+        <h1 className={styles.heroTitle}>Stockholm</h1>
+        <h3 className={styles.heroSubtitle}>Music Group</h3>
         </div>
         {/* <Image
           className={styles.logo}
@@ -35,7 +35,7 @@ function Hero() {
           width={150}
           height={300}
         /> */}
-        <Link className={styles.cta} href="/">
+        <Link className={styles.cta} href="#contact">
           BOKA OSS
         </Link>
       </div>
