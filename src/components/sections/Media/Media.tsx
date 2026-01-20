@@ -40,7 +40,7 @@ function Media() {
         <h2 className={styles.title}>Media</h2>
         <section className={styles.iconsWrapper}>
           <Link
-            href="https://www.youtube.com"
+            href="https://youtube.com/@stockholmmusicgroup?"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.iconLink}
@@ -53,7 +53,7 @@ function Media() {
             />
           </Link>
           <Link
-            href="https://www.instagram.com"
+            href="https://www.instagram.com/stockholmmusicgroup?igsh=MXJvM3JscHcybXFmbA%3D%3D&utm_source=qr"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.iconLink}
@@ -66,7 +66,7 @@ function Media() {
             />
           </Link>
           <Link
-            href="https://www.facebook.com"
+            href="https://www.facebook.com/share/1JwFqG14MH/?mibextid=wwXIfr"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.iconLink}
