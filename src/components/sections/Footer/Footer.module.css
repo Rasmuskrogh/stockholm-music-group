@@ -14,8 +14,15 @@
 }
 
 .footerContact span a {
-    text-decoration: none;
+  text-decoration: none;
   color: white;
+  transition: color 0.3s ease, opacity 0.3s ease, text-decoration 0.3s ease;
+}
+
+.footerContact span a:hover {
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.9;
+  text-decoration: underline;
 }
 
 .footerContact span img {

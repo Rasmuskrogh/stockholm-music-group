@@ -60,12 +60,17 @@
 .input {
   width: 100%;
   padding: 0.75rem;
-  transition: border-color 0.15s ease-in-out;
+  transition: border-color 0.15s ease-in-out, opacity 0.3s ease;
 }
 
 .input::placeholder,
 .textarea::placeholder {
   color: white;
+}
+
+.input:hover {
+  opacity: 0.9;
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .input:focus {
@@ -78,7 +83,12 @@
   padding: 0.75rem;
   resize: none;
   height: 3.1rem;
-  transition: border-color 0.15s ease-in-out, height 500ms ease;
+  transition: border-color 0.15s ease-in-out, height 500ms ease, opacity 0.3s ease;
+}
+
+.textarea:hover {
+  opacity: 0.9;
+  border-color: rgba(255, 255, 255, 0.8);
 }
 
 .textarea:focus {
