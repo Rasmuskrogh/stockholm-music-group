@@ -8,10 +8,10 @@ import styles from "./Media.module.css";
 
 const videos = [
   {
-    id: 1,
-    composer: "Leonard Cohen",
-    title: "Hallelujah",
-    youtubeId: "gWM82gyJuqM",
+    id: 4,
+    composer: "Fred Åkerström",
+    title: "Jag ger dig min morgon",
+    youtubeId: "ntgveY_yZAA",
   },
   {
     id: 2,
@@ -20,16 +20,16 @@ const videos = [
     youtubeId: "tmXfLsj8Is0",
   },
   {
+    id: 1,
+    composer: "Leonard Cohen",
+    title: "Hallelujah",
+    youtubeId: "gWM82gyJuqM",
+  },
+  {
     id: 3,
     composer: "Elvis Presley",
     title: "Can't help falling in Love",
     youtubeId: "LHYlxyZUU4I",
-  },
-  {
-    id: 4,
-    composer: "Fred Åkerström",
-    title: "Jag ger dig min morgon",
-    youtubeId: "ntgveY_yZAA",
   },
 ];
 
