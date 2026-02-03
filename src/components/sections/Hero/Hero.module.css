@@ -24,7 +24,7 @@
     height: calc(100vh - env(safe-area-inset-top));
     min-height: calc(100vh - env(safe-area-inset-top));
   }
-  
+
   @supports (height: 100dvh) {
     .heroImageWrapper {
       height: calc(100dvh - env(safe-area-inset-top));
@@ -57,7 +57,6 @@
   object-position: center 15%;
 }
 
-
 .heroText {
   position: absolute;
   font-family: "Playfair", serif;
@@ -84,7 +83,6 @@
   line-height: 4.5rem;
 }
 
-
 .cta {
   border: none;
   padding: 0.5rem 1rem;
@@ -98,13 +96,16 @@
   margin: 1rem;
   z-index: 3;
   border-radius: 0.5rem;
-  background-color: black;
-  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  background-color: #2596be;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    transform 0.3s ease;
   cursor: pointer;
 }
 
 .cta:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #295b6d;
   border-color: rgba(255, 255, 255, 0.8);
   transform: translateY(-2px);
 }
