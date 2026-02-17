@@ -1,12 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Section from "@/components/ui/Section/Section";
-import Image from "next/image";
-
 import styles from "./Hero.module.css";
 import Link from "next/link";
 
+const defaultHero = { videoUrl: "/videos/hero.mp4", title: "Stockholm", subtitle: "Music Group", ctaText: "BOKA OSS" };
+
 function Hero() {
+  const [hero, setHero] = useState(defaultHero);
+  useEffect(() => {
+    fetch("/api/hero").then((r) => r.json()).then((d) => setHero({ ...defaultHero, ...d })).catch(() => { });
+  }, []);
+
   const handleScrollToContact = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const contactElement = document.getElementById("contact");
@@ -29,11 +35,11 @@ function Hero() {
           />
         </figure>
         <div className={styles.heroText}>
-          <h1 className={styles.heroTitle}>Stockholm</h1>
-          <h2 className={styles.heroSubtitle}>Music Group</h2>
+          <h1 className={styles.heroTitle}>{hero.title ?? defaultHero.title}</h1>
+          <h2 className={styles.heroSubtitle}>{hero.subtitle ?? defaultHero.subtitle}</h2>
         </div>
         <Link className={styles.cta} href="#contact" onClick={handleScrollToContact}>
-          <strong>BOKA OSS</strong>
+          <strong>{hero.ctaText ?? defaultHero.ctaText}</strong>
         </Link>
       </div>
     </Section>

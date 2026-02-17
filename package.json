@@ -2,16 +2,30 @@
   "name": "stockholm-music-group",
   "version": "0.1.0",
   "private": true,
+  "prisma": {
+    "seed": "npx tsx prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
+    "db:push": "prisma db push",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.8.0",
     "next": "16.1.0",
+    "next-auth": "^4.24.13",
     "nodemailer": "^7.0.11",
+    "pg": "^8.18.0",
+    "prisma": "^7.4.0",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },

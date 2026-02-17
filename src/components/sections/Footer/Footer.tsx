@@ -12,23 +12,32 @@ interface ContactInfo {
   phone: string;
 }
 
+const defaultCopyright = "© Stockholm Music Group 2026. All rights reserved.";
+const defaultMadeByText = "Rasmus Krogh-Andersen";
+const defaultMadeByUrl = "https://portfolio-page-next-js.vercel.app/";
+
 function Footer() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
+  const [copyright, setCopyright] = useState(defaultCopyright);
+  const [madeByText, setMadeByText] = useState(defaultMadeByText);
+  const [madeByUrl, setMadeByUrl] = useState(defaultMadeByUrl);
 
   useEffect(() => {
-    const fetchContactInfo = async () => {
-      try {
-        const response = await fetch("/api/contact-info");
-        if (response.ok) {
-          const data = await response.json();
-          setContactInfo(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch contact info:", error);
-      }
-    };
+    fetch("/api/contact-info")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => data && setContactInfo(data))
+      .catch(() => { });
+  }, []);
 
-    fetchContactInfo();
+  useEffect(() => {
+    fetch("/api/content")
+      .then((r) => r.json())
+      .then((data: Record<string, string>) => {
+        if (data.footer_copyright) setCopyright(data.footer_copyright);
+        if (data.footer_madeby_text) setMadeByText(data.footer_madeby_text);
+        if (data.footer_madeby_url) setMadeByUrl(data.footer_madeby_url);
+      })
+      .catch(() => { });
   }, []);
 
   if (!contactInfo) {
@@ -40,16 +49,9 @@ function Footer() {
         </div>
         <div className={styles.footerContent}>
           <div className={styles.spacer}></div>
-          <div className={styles.copyright}>
-            <p>© Stockholm Music Group 2026. All rights reserved.</p>
-          </div>
+          <div className={styles.copyright}><p>{copyright}</p></div>
           <div className={styles.madeBy}>
-            <p>
-              Skapad av:{" "}
-              <Link href="https://portfolio-page-next-js.vercel.app/">
-                Rasmus Krogh-Andersen
-              </Link>
-            </p>
+            <p>Skapad av: <Link href={madeByUrl}>{madeByText}</Link></p>
           </div>
         </div>
       </Section>
@@ -64,19 +66,11 @@ function Footer() {
       </div>
       <div className={styles.footerContent}>
         <div className={styles.spacer}></div>
-        <div className={styles.copyright}>
-          <p>© Stockholm Music Group 2026. All rights reserved.</p>
-        </div>
+        <div className={styles.copyright}><p>{copyright}</p></div>
         <div className={styles.madeBy}>
-          <p>
-            Skapad av:{" "}
-            <Link href="https://portfolio-page-next-js.vercel.app/">
-              Rasmus Krogh-Andersen
-            </Link>
-          </p>
+          <p>Skapad av: <Link href={madeByUrl}>{madeByText}</Link></p>
         </div>
       </div>
-      
     </Section>
   );
 }

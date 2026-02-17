@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Container from "@/components/ui/Container/Container";
 import Section from "@/components/ui/Section/Section";
 import Image from "next/image";
@@ -6,38 +9,31 @@ import VideoList from "./VideoList";
 
 import styles from "./Media.module.css";
 
-const videos = [
-  {
-    id: 4,
-    composer: "Fred Åkerström",
-    title: "Jag ger dig min morgon",
-    youtubeId: "ntgveY_yZAA",
-  },
-  {
-    id: 2,
-    composer: "Nat King Cole",
-    title: "L-O-V-E",
-    youtubeId: "tmXfLsj8Is0",
-  },
-  {
-    id: 1,
-    composer: "Leonard Cohen",
-    title: "Hallelujah",
-    youtubeId: "gWM82gyJuqM",
-  },
-  {
-    id: 3,
-    composer: "Elvis Presley",
-    title: "Can't help falling in Love",
-    youtubeId: "LHYlxyZUU4I",
-  },
-];
+interface MediaVideo {
+  id: number;
+  composer: string;
+  title: string;
+  youtubeId: string;
+  sortOrder: number;
+}
 
 function Media() {
+  const [videos, setVideos] = useState<MediaVideo[]>([]);
+  const [sectionTitle, setSectionTitle] = useState("Media");
+
+  useEffect(() => {
+    Promise.all([fetch("/api/media").then((r) => r.json()), fetch("/api/content?key=media_section_title").then((r) => r.json()).catch(() => ({}))])
+      .then(([vids, content]) => {
+        setVideos(Array.isArray(vids) ? vids : []);
+        if (content?.value) setSectionTitle(content.value);
+      })
+      .catch(() => { });
+  }, []);
+
   return (
     <Section className={styles.transparentSection}>
       <Container>
-        <h2 className={styles.title}>Media</h2>
+        <h2 className={styles.title}>{sectionTitle}</h2>
         <section className={styles.iconsWrapper}>
           <Link
             href="https://youtube.com/@stockholmmusicgroup?"

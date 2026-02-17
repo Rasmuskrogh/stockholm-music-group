@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Hero {
+  id                 String   @id @default("default")
+  videoUrl           String   @default("/videos/hero.mp4")
+  backgroundImageUrl String   @default("/images/background.jpg")
+  title              String   @default("Stockholm")
+  subtitle           String   @default("Music Group")
+  ctaText            String   @default("BOKA OSS")
+  updatedAt          DateTime @updatedAt
+}
+
+model Content {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model MediaVideo {
+  id        String   @id @default(cuid())
+  composer  String
+  title     String
+  youtubeId String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+}
