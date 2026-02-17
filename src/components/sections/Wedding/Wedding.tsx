@@ -30,7 +30,6 @@ const defaultBlocks: WeddingBlock[] = [
 function Wedding() {
   const [blocks, setBlocks] = useState<WeddingBlock[]>(defaultBlocks);
   const [cta, setCta] = useState(defaultCta);
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     fetch("/api/content")
@@ -41,8 +40,7 @@ function Wedding() {
         } catch { }
         if (data.wedding_cta) setCta(data.wedding_cta);
       })
-      .catch(() => { })
-      .finally(() => setLoaded(true));
+      .catch(() => { });
   }, []);
 
   return (
