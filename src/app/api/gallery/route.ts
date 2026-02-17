@@ -41,10 +41,7 @@ export async function GET() {
     console.log("=== Testing Cloudinary credentials ===");
     console.log("Cloud name:", process.env.CLOUDINARY_CLOUD_NAME);
     console.log("API key:", process.env.CLOUDINARY_API_KEY ? "Set" : "Missing");
-    console.log(
-      "API secret:",
-      process.env.CLOUDINARY_API_SECRET ? "Set" : "Missing"
-    );
+    console.log("API secret:", process.env.CLOUDINARY_API_SECRET ? "Set" : "Missing");
 
     // Testa att lista alla bilder (för att verifiera credentials)
     try {
@@ -53,15 +50,11 @@ export async function GET() {
         max_results: 10,
       });
       console.log("✅ Credentials are valid!");
-      console.log(
-        `Total resources found: ${allResources.resources?.length || 0}`
-      );
+      console.log(`Total resources found: ${allResources.resources?.length || 0}`);
       if (allResources.resources && allResources.resources.length > 0) {
         console.log(
           "Sample public_ids:",
-          allResources.resources
-            .slice(0, 3)
-            .map((r: CloudinaryResource) => r.public_id)
+          allResources.resources.slice(0, 3).map((r: CloudinaryResource) => r.public_id)
         );
       }
     } catch (e) {
@@ -73,70 +66,32 @@ export async function GET() {
     // Lista alla mappar
     try {
       const foldersResult = await cloudinary.api.root_folders();
-      console.log(
-        "Available root folders:",
-        foldersResult.folders?.map((f: CloudinaryFolder) => f.name) || []
-      );
+      console.log("Available root folders:", foldersResult.folders?.map((f: CloudinaryFolder) => f.name) || []);
     } catch (e) {
       const errorMessage = e instanceof Error ? e.message : "Unknown error";
       console.log("Could not list root folders:", errorMessage);
     }
 
-    // Lista undermappar i stockholm-music-group
-    try {
-      const subfoldersResult = await cloudinary.api.sub_folders(
-        "stockholm-music-group"
-      );
-      console.log(
-        "Subfolders in stockholm-music-group:",
-        subfoldersResult.folders?.map((f: CloudinaryFolder) => f.path) || []
-      );
-    } catch (e) {
-      const errorMessage = e instanceof Error ? e.message : "Unknown error";
-      console.log("Could not list subfolders:", errorMessage);
-    }
-
-    // Testa olika prefix-variationer
     const baseFolder = folder.endsWith("/") ? folder.slice(0, -1) : folder;
     console.log("Base folder from env:", baseFolder);
 
-    // Om folder redan innehåller "stockholm-music-group", använd den direkt
-    // Annars lägg till "stockholm-music-group/" framför
-    let prefixVariations: string[] = [];
-
-    if (baseFolder.includes("stockholm-music-group")) {
-      // Folder är redan fullständig sökväg (t.ex. "stockholm-music-group/gallery")
-      const pathWithoutRoot = baseFolder.replace("stockholm-music-group/", "");
-      prefixVariations = [
-        `${baseFolder}/`,
-        baseFolder,
-        `stockholm-music-group/${pathWithoutRoot}/`,
-        `stockholm-music-group/${pathWithoutRoot}`,
-      ];
-    } else {
-      // Folder är bara "gallery", lägg till stockholm-music-group
-      prefixVariations = [
-        `stockholm-music-group/${baseFolder}/`,
-        `stockholm-music-group/${baseFolder}`,
-        `${baseFolder}/`,
-        `stockholm-music-group/`,
-      ];
+    // Lista undermappar i överordnad mapp (om folder innehåller /)
+    const rootForSubfolders = baseFolder.includes("/") ? baseFolder.split("/").slice(0, -1).join("/") : baseFolder;
+    if (rootForSubfolders) {
+      try {
+        const subfoldersResult = await cloudinary.api.sub_folders(rootForSubfolders);
+        console.log(
+          `Subfolders in ${rootForSubfolders}:`,
+          subfoldersResult.folders?.map((f: CloudinaryFolder) => f.path) || []
+        );
+      } catch (e) {
+        const errorMessage = e instanceof Error ? e.message : "Unknown error";
+        console.log("Could not list subfolders:", errorMessage);
+      }
     }
 
-    // Lägg också till "home/" varianten
-    prefixVariations.push(
-      `home/stockholm-music-group/${
-        baseFolder.includes("stockholm-music-group")
-          ? baseFolder.replace("stockholm-music-group/", "")
-          : baseFolder
-      }/`,
-      `home/stockholm-music-group/${
-        baseFolder.includes("stockholm-music-group")
-          ? baseFolder.replace("stockholm-music-group/", "")
-          : baseFolder
-      }`,
-      `home/stockholm-music-group/`
-    );
+    // Prefix-variationer baserat på CLOUDINARY_FOLDER
+    const prefixVariations: string[] = [`${baseFolder}/`, baseFolder, `home/${baseFolder}/`, `home/${baseFolder}`];
 
     interface CloudinaryApiResult {
       resources?: CloudinaryResource[];
@@ -147,17 +102,10 @@ export async function GET() {
 
     // Försök först med search API (mer pålitlig för mappar)
     try {
-      console.log(
-        "Trying search API with folder:stockholm-music-group/gallery"
-      );
-      const searchResult = await cloudinary.search
-        .expression("folder:stockholm-music-group/gallery/*")
-        .max_results(50)
-        .execute();
+      console.log("Trying search API with folder:", baseFolder);
+      const searchResult = await cloudinary.search.expression(`folder:${baseFolder}/*`).max_results(50).execute();
       if (searchResult.resources && searchResult.resources.length > 0) {
-        console.log(
-          `✅ Found ${searchResult.resources.length} images using search API`
-        );
+        console.log(`✅ Found ${searchResult.resources.length} images using search API`);
         result = searchResult;
         usedPrefix = "search_api";
       } else {
@@ -182,9 +130,7 @@ export async function GET() {
           if (testResult.resources && testResult.resources.length > 0) {
             result = testResult;
             usedPrefix = testPrefix;
-            console.log(
-              `✅ Found ${testResult.resources.length} images with prefix: "${testPrefix}"`
-            );
+            console.log(`✅ Found ${testResult.resources.length} images with prefix: "${testPrefix}"`);
             break;
           } else {
             console.log(`  No images found with prefix: "${testPrefix}"`);
