@@ -39,3 +39,12 @@ model MediaVideo {
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
 }
+
+model GalleryImage {
+  id          String   @id @default(cuid())
+  publicId    String   @unique // Cloudinary public_id
+  displayName String   @default("") // Visningsnamn i modalen
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

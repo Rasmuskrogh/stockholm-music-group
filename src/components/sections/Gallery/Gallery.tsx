@@ -75,9 +75,9 @@ export default function Gallery() {
   if (loading) {
     return (
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Gallery</h2>
+        <h2 className={styles.sectionTitle}>Galleri</h2>
         <div className={styles.loading}>
-          <p>Loading gallery images...</p>
+          <p>Laddar galleri bilder...</p>
         </div>
       </section>
     );
@@ -86,7 +86,7 @@ export default function Gallery() {
   if (error) {
     return (
       <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>Gallery</h2>
+        <h2 className={styles.sectionTitle}>Galleri</h2>
         <div className={styles.error}>
           <p>Fel vid laddning av galleri: {error}</p>
           <small>
@@ -120,9 +120,8 @@ export default function Gallery() {
                       alt={image.alt}
                       width={image.width}
                       height={image.height}
-                      className={`${styles.galleryImage} ${
-                        image.height > image.width ? styles.portraitImage : ""
-                      }`}
+                      className={`${styles.galleryImage} ${image.height > image.width ? styles.portraitImage : ""
+                        }`}
                       priority={false}
                       placeholder="blur"
                       blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="

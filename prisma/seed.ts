@@ -96,8 +96,7 @@ Med sin kombination av musikalisk värme, bred repertoar och lyhördhet inför p
     },
     { key: "wedding_blocks", value: JSON.stringify(weddingBlocks) },
     { key: "footer_copyright", value: "© Stockholm Music Group 2026. All rights reserved." },
-    { key: "footer_madeby_text", value: "Rasmus Krogh-Andersen" },
-    { key: "footer_madeby_url", value: "https://portfolio-page-next-js.vercel.app/" },
+    /* footer_madeby_text och footer_madeby_url finns inte – styrs enbart i koden (Footer.tsx) */
     { key: "media_section_title", value: "Media" },
     { key: "wedding_cta", value: "👉 Kontakta oss för lediga datum" },
   ];

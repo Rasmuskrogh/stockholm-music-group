@@ -1,6 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./page.module.css";
+import g from "../AdminGlobal.module.css";
+
+/** Endast dessa nycklar kan redigeras här. Bröllop redigeras under Bröllop-sidan. "Made by" styrs enbart i koden. */
+const CONTENT_LABELS: Record<string, string> = {
+  bio_text: "Biotext",
+  footer_copyright: "Footer – copyright",
+  media_section_title: "Mediasektion – titel",
+};
 
 export default function AdminContentPage() {
   const [content, setContent] = useState<Record<string, string>>({});
@@ -33,39 +42,46 @@ export default function AdminContentPage() {
     } else setMessage("Kunde inte spara.");
   }
 
-  if (loading) return <p>Laddar...</p>;
+  if (loading) return <p className={g.adminLoading}>Laddar...</p>;
 
-  const keys = Object.keys(content);
+  const keys = Object.keys(content).filter((key) => CONTENT_LABELS[key]);
 
   return (
-    <div style={{ maxWidth: 720 }}>
-      <h1 style={{ marginBottom: 24 }}>Texter</h1>
-      {message && <p style={{ marginBottom: 16, color: message === "Sparat." ? "#6a6" : "#e55" }}>{message}</p>}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+    <div className={styles.wrapper}>
+      <h1 className={g.adminPageTitle}>Texter</h1>
+      <p className={g.adminPageSubtitle}>Redigera texter som visas på sidan. "Skapad av" styrs i koden.</p>
+      {message && (
+        <p className={`${message === "Sparat." ? g.adminMessageSuccess : g.adminMessageError} ${styles.message}`}>
+          {message}
+        </p>
+      )}
+      <div className={styles.list}>
         {keys.map((key) => (
-          <div key={key} style={{ padding: 16, background: "#1a1a1a", borderRadius: 8 }}>
-            <strong style={{ display: "block", marginBottom: 8 }}>{key}</strong>
+          <div key={key} className={styles.card}>
+            <strong className={styles.cardTitle}>{CONTENT_LABELS[key]}</strong>
             {editingKey === key ? (
               <>
                 <textarea
                   rows={6}
                   value={content[key] ?? ""}
                   onChange={(e) => setContent((prev) => ({ ...prev, [key]: e.target.value }))}
-                  style={{ width: "100%", padding: 10, background: "#222", border: "1px solid #444", borderRadius: 4, color: "#fff", fontFamily: "inherit" }}
+                  className={styles.textarea}
                 />
-                <div style={{ marginTop: 8, display: "flex", gap: 8 }}>
-                  <button type="button" onClick={() => handleSave(key, content[key] ?? "")} disabled={saving} style={{ padding: "8px 16px", background: "#2596be", border: "none", borderRadius: 4, color: "#fff", cursor: "pointer" }}>
+                <div className={styles.actions}>
+                  <button type="button" onClick={() => handleSave(key, content[key] ?? "")} disabled={saving} className={g.adminBtnPrimary}>
                     Spara
                   </button>
-                  <button type="button" onClick={() => setEditingKey(null)} style={{ padding: "8px 16px", background: "#444", border: "none", borderRadius: 4, color: "#fff", cursor: "pointer" }}>
+                  <button type="button" onClick={() => setEditingKey(null)} className={g.adminBtnSecondary}>
                     Avbryt
                   </button>
                 </div>
               </>
             ) : (
               <>
-                <p style={{ margin: 0, whiteSpace: "pre-wrap", color: "#aaa", fontSize: 14 }}>{(content[key] ?? "").slice(0, 200)}{(content[key] ?? "").length > 200 ? "..." : ""}</p>
-                <button type="button" onClick={() => setEditingKey(key)} style={{ marginTop: 8, padding: "6px 12px", background: "#333", border: "none", borderRadius: 4, color: "#fff", cursor: "pointer", fontSize: 14 }}>
+                <p className={styles.preview}>
+                  {(content[key] ?? "").slice(0, 200)}{(content[key] ?? "").length > 200 ? "..." : ""}
+                </p>
+                <button type="button" onClick={() => setEditingKey(key)} className={styles.editButton}>
                   Redigera
                 </button>
               </>

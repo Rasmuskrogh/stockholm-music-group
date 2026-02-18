@@ -1,0 +1,86 @@
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.aside {
+  width: 240px;
+  padding: 28px 24px;
+  border-right: 1px solid #222;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
+}
+
+.asideTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.asideEmail {
+  margin: 8px 0 0 0;
+  font-size: 13px;
+  color: #888;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 28px;
+}
+
+.navLink {
+  color: #aaa;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition:
+    color 0.15s ease,
+    background 0.15s ease;
+}
+
+.navLink:hover {
+  color: #2596be;
+  background: #151515;
+}
+
+.main {
+  flex: 1;
+  padding: 32px 40px 48px;
+  overflow: auto;
+  max-width: 900px;
+}
+
+.siteLink {
+  color: #666;
+  font-size: 14px;
+  margin-top: auto;
+  padding-top: 24px;
+  text-decoration: none;
+}
+
+.siteLink:hover {
+  color: #fff;
+}
+
+.signOut {
+  margin-top: 16px;
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+}
+
+.signOut:hover {
+  border-color: #444;
+  color: #fff;
+}

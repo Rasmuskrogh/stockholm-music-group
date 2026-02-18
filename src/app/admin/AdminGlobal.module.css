@@ -1,0 +1,144 @@
+/* Global admin styles – shared across all admin pages */
+
+.adminLayout {
+  min-height: 100vh;
+  background: #0a0a0a;
+  color: #fff;
+}
+
+.adminInput {
+  width: 100%;
+  padding: 10px 12px;
+  background: #222;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.adminInput:focus {
+  outline: none;
+  border-color: #2596be;
+}
+
+.adminLabel {
+  display: block;
+  margin-bottom: 6px;
+  color: #aaa;
+  font-size: 14px;
+}
+
+.adminBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adminBtnPrimary {
+  padding: 10px 20px;
+  background: #2596be;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adminBtnPrimary:hover:not(:disabled) {
+  background: #1a7a9e;
+}
+
+.adminBtnPrimary:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.adminBtnSecondary {
+  padding: 8px 16px;
+  background: #444;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adminBtnSecondary:hover {
+  background: #555;
+}
+
+.adminBtnDanger {
+  padding: 8px 14px;
+  background: #522;
+  border: none;
+  border-radius: 4px;
+  color: #faa;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.adminBtnDanger:hover {
+  background: #633;
+}
+
+.adminMessageSuccess {
+  margin: 0;
+  color: #6a6;
+  font-size: 14px;
+}
+
+.adminMessageError {
+  margin: 0;
+  color: #e55;
+  font-size: 14px;
+}
+
+.adminPageTitle {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.adminPageSubtitle {
+  margin: 0 0 32px 0;
+  color: #888;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.adminSectionTitle {
+  margin: 0 0 16px 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ddd;
+}
+
+.adminCard {
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 8px;
+}
+
+.adminForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.adminFormRow {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.adminLoading {
+  margin: 0;
+  color: #888;
+  font-size: 15px;
+}

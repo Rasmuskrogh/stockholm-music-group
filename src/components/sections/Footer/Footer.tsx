@@ -34,8 +34,7 @@ function Footer() {
       .then((r) => r.json())
       .then((data: Record<string, string>) => {
         if (data.footer_copyright) setCopyright(data.footer_copyright);
-        if (data.footer_madeby_text) setMadeByText(data.footer_madeby_text);
-        if (data.footer_madeby_url) setMadeByUrl(data.footer_madeby_url);
+        /* madeBy-text och -url styrs enbart i koden (defaultMadeByText/defaultMadeByUrl) */
       })
       .catch(() => { });
   }, []);

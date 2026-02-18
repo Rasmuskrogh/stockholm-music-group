@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import styles from "./page.module.css";
+import g from "../AdminGlobal.module.css";
 
 export default function AdminHeroPage() {
   const [videoUrl, setVideoUrl] = useState("");
@@ -45,43 +47,47 @@ export default function AdminHeroPage() {
     setMessage(res.ok ? "Sparat." : "Kunde inte spara.");
   }
 
-  if (loading) return <p>Laddar...</p>;
-
-  const inputStyle = {
-    width: "100%",
-    padding: 10,
-    background: "#222",
-    border: "1px solid #444",
-    borderRadius: 4,
-    color: "#fff",
-  };
+  if (loading) return <p className={g.adminLoading}>Laddar...</p>;
 
   return (
-    <div style={{ maxWidth: 560 }}>
-      <h1 style={{ marginBottom: 24 }}>Hero och bakgrund</h1>
-      <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <label>
-          <span style={{ display: "block", marginBottom: 4 }}>Hero-video (sokvag)</span>
-          <input type="text" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} style={inputStyle} />
-        </label>
-        <label>
-          <span style={{ display: "block", marginBottom: 4 }}>Bakgrundsbild (sokvag)</span>
-          <input type="text" value={backgroundImageUrl} onChange={(e) => setBackgroundImageUrl(e.target.value)} style={inputStyle} />
-        </label>
-        <label>
-          <span style={{ display: "block", marginBottom: 4 }}>Rubrik</span>
-          <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
-        </label>
-        <label>
-          <span style={{ display: "block", marginBottom: 4 }}>Underrubrik</span>
-          <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} style={inputStyle} />
-        </label>
-        <label>
-          <span style={{ display: "block", marginBottom: 4 }}>Knapptext (CTA)</span>
-          <input type="text" value={ctaText} onChange={(e) => setCtaText(e.target.value)} style={inputStyle} />
-        </label>
-        {message && <p style={{ margin: 0, color: message === "Sparat." ? "#6a6" : "#e55" }}>{message}</p>}
-        <button type="submit" disabled={saving} style={{ padding: 12, background: "#2596be", border: "none", borderRadius: 4, color: "#fff", fontWeight: 600, cursor: saving ? "not-allowed" : "pointer", alignSelf: "flex-start" }}>
+    <div className={styles.wrapper}>
+      <h1 className={g.adminPageTitle}>Hero och bakgrund</h1>
+      <p className={g.adminPageSubtitle}>Video, bakgrundsbild och texter för herosektionen.</p>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.formGroup}>
+          <label>
+            <span className={g.adminLabel}>Hero-video (sökväg)</span>
+            <input type="text" value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} className={g.adminInput} />
+          </label>
+        </div>
+        <div className={styles.formGroup}>
+          <label>
+            <span className={g.adminLabel}>Bakgrundsbild (sökväg)</span>
+            <input type="text" value={backgroundImageUrl} onChange={(e) => setBackgroundImageUrl(e.target.value)} className={g.adminInput} />
+          </label>
+        </div>
+        <div className={styles.formGroup}>
+          <label>
+            <span className={g.adminLabel}>Rubrik</span>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className={g.adminInput} />
+          </label>
+        </div>
+        <div className={styles.formGroup}>
+          <label>
+            <span className={g.adminLabel}>Underrubrik</span>
+            <input type="text" value={subtitle} onChange={(e) => setSubtitle(e.target.value)} className={g.adminInput} />
+          </label>
+        </div>
+        <div className={styles.formGroup}>
+          <label>
+            <span className={g.adminLabel}>Knapptext (CTA)</span>
+            <input type="text" value={ctaText} onChange={(e) => setCtaText(e.target.value)} className={g.adminInput} />
+          </label>
+        </div>
+        {message && (
+          <p className={`${message === "Sparat." ? g.adminMessageSuccess : g.adminMessageError} ${styles.message}`}>{message}</p>
+        )}
+        <button type="submit" disabled={saving} className={`${g.adminBtnPrimary} ${styles.saveButton}`}>
           {saving ? "Sparar..." : "Spara"}
         </button>
       </form>

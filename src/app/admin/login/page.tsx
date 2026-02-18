@@ -3,6 +3,7 @@
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import styles from "./page.module.css";
 
 export default function AdminLoginPage() {
   const [email, setEmail] = useState("");
@@ -28,19 +29,19 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#111" }}>
-      <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: 360, padding: 24, background: "#222", borderRadius: 8, display: "flex", flexDirection: "column", gap: 16 }}>
-        <h1 style={{ margin: 0, fontSize: 24, color: "#fff" }}>Logga in</h1>
-        <label style={{ color: "#aaa", fontSize: 14 }}>
+    <div className={styles.wrapper}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <h1 className={styles.title}>Logga in</h1>
+        <label className={styles.label}>
           E-post
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required style={{ display: "block", width: "100%", marginTop: 4, padding: 10, background: "#333", border: "1px solid #444", borderRadius: 4, color: "#fff" }} />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className={styles.input} autoComplete="email" />
         </label>
-        <label style={{ color: "#aaa", fontSize: 14 }}>
+        <label className={styles.label}>
           Lösenord
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required style={{ display: "block", width: "100%", marginTop: 4, padding: 10, background: "#333", border: "1px solid #444", borderRadius: 4, color: "#fff" }} />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className={styles.input} autoComplete="current-password" />
         </label>
-        {error && <p style={{ color: "#e55", margin: 0, fontSize: 14 }}>{error}</p>}
-        <button type="submit" disabled={loading} style={{ padding: 12, background: "#2596be", border: "none", borderRadius: 4, color: "#fff", fontWeight: 600, cursor: loading ? "not-allowed" : "pointer" }}>
+        {error && <p className={styles.error}>{error}</p>}
+        <button type="submit" disabled={loading} className={styles.submitButton}>
           {loading ? "Loggar in..." : "Logga in"}
         </button>
       </form>
