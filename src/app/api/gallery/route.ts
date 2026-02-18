@@ -69,7 +69,13 @@ export async function GET() {
       _sortOrder: byPublicId.get(img.id)?.sortOrder ?? 999,
     }));
     withSort.sort((a, b) => a._sortOrder - b._sortOrder);
-    const sorted = withSort.map(({ _sortOrder, ...rest }) => rest);
+    const sorted: GalleryImageOut[] = withSort.map((item) => ({
+      id: item.id,
+      url: item.url,
+      alt: item.alt,
+      width: item.width,
+      height: item.height,
+    }));
     return NextResponse.json(sorted);
   } catch (error) {
     console.error("Gallery API error:", error);

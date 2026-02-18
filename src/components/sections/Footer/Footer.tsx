@@ -19,8 +19,8 @@ const defaultMadeByUrl = "https://portfolio-page-next-js.vercel.app/";
 function Footer() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const [copyright, setCopyright] = useState(defaultCopyright);
-  const [madeByText, setMadeByText] = useState(defaultMadeByText);
-  const [madeByUrl, setMadeByUrl] = useState(defaultMadeByUrl);
+  const [madeByText] = useState(defaultMadeByText);
+  const [madeByUrl] = useState(defaultMadeByUrl);
 
   useEffect(() => {
     fetch("/api/contact-info")

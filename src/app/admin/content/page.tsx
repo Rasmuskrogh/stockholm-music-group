@@ -49,7 +49,7 @@ export default function AdminContentPage() {
   return (
     <div className={styles.wrapper}>
       <h1 className={g.adminPageTitle}>Texter</h1>
-      <p className={g.adminPageSubtitle}>Redigera texter som visas på sidan. "Skapad av" styrs i koden.</p>
+      <p className={g.adminPageSubtitle}>Redigera texter som visas på sidan. &quot;Skapad av&quot; styrs i koden.</p>
       {message && (
         <p className={`${message === "Sparat." ? g.adminMessageSuccess : g.adminMessageError} ${styles.message}`}>
           {message}
