@@ -12,6 +12,15 @@ cloudinary.config({
 
 const folder = process.env.CLOUDINARY_FOLDER || "gallery";
 
+interface AdminGalleryItem {
+  publicId: string;
+  url: string;
+  width: number;
+  height: number;
+  displayName: string;
+  sortOrder: number;
+}
+
 function getCloudinaryResources() {
   const baseFolder = folder.endsWith("/") ? folder.slice(0, -1) : folder;
   return cloudinary.search
@@ -35,14 +44,16 @@ export async function GET() {
     const resources = await getCloudinaryResources();
     const dbImages = await prisma.galleryImage.findMany();
     const byPublicId = new Map(dbImages.map((row) => [row.publicId, row]));
-    const list = resources.map((r: { public_id: string; secure_url: string; width?: number; height?: number }) => ({
-      publicId: r.public_id,
-      url: r.secure_url,
-      width: r.width ?? 0,
-      height: r.height ?? 0,
-      displayName: byPublicId.get(r.public_id)?.displayName ?? "",
-      sortOrder: byPublicId.get(r.public_id)?.sortOrder ?? 0,
-    }));
+    const list: AdminGalleryItem[] = resources.map(
+      (r: { public_id: string; secure_url: string; width?: number; height?: number }) => ({
+        publicId: r.public_id,
+        url: r.secure_url,
+        width: r.width ?? 0,
+        height: r.height ?? 0,
+        displayName: byPublicId.get(r.public_id)?.displayName ?? "",
+        sortOrder: byPublicId.get(r.public_id)?.sortOrder ?? 0,
+      })
+    );
     list.sort((a, b) => a.sortOrder - b.sortOrder || a.publicId.localeCompare(b.publicId));
     return NextResponse.json(list);
   } catch (error) {
