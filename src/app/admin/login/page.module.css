@@ -7,6 +7,12 @@
   background: #0a0a0a;
 }
 
+.loading {
+  margin: 0;
+  color: #888;
+  font-size: 15px;
+}
+
 .form {
   width: 100%;
   max-width: 380px;
