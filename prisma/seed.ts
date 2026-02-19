@@ -11,8 +11,9 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 const DEFAULT_ADMIN_PASSWORD = "BytMig123!";
-const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL;
-if (!RECIPIENT_EMAIL) throw new Error("RECIPIENT_EMAIL is not set");
+const rawRecipientEmail = process.env.RECIPIENT_EMAIL;
+if (!rawRecipientEmail) throw new Error("RECIPIENT_EMAIL is not set");
+const RECIPIENT_EMAIL: string = rawRecipientEmail;
 
 const weddingBlocks = [
   {
