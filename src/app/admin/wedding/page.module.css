@@ -35,6 +35,17 @@
   flex-wrap: wrap;
 }
 
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.orderButtons {
+  display: flex;
+  gap: 4px;
+}
+
 .cardTitle {
   margin: 0;
   font-size: 16px;
@@ -43,6 +54,9 @@
 }
 
 .blockActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
   margin-bottom: 24px;
 }
 

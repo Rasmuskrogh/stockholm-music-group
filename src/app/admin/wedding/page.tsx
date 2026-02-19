@@ -15,6 +15,12 @@ type WeddingBlock = {
   outro?: string;
 };
 
+type CtaBlock = { type: "cta"; text: string };
+
+function isCtaBlock(b: WeddingBlock | CtaBlock): b is CtaBlock {
+  return "type" in b && b.type === "cta";
+}
+
 type BlockType = "text" | "text_list" | "list" | "steps" | "items" | "intro_outro";
 
 function inferBlockType(b: WeddingBlock): BlockType {
@@ -69,9 +75,10 @@ const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   intro_outro: "Intro + lista + outro",
 };
 
+type BlockItem = { kind: "content"; data: ReturnType<typeof blockToEdit> } | { kind: "cta"; data: CtaBlock };
+
 export default function AdminWeddingPage() {
-  const [blocks, setBlocks] = useState<ReturnType<typeof blockToEdit>[]>([]);
-  const [cta, setCta] = useState("");
+  const [items, setItems] = useState<BlockItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -83,11 +90,23 @@ export default function AdminWeddingPage() {
         try {
           const raw = data.wedding_blocks;
           const arr = raw ? JSON.parse(raw) : [];
-          setBlocks(Array.isArray(arr) ? arr.map((b: WeddingBlock) => blockToEdit(b)) : []);
+          const list = Array.isArray(arr) ? arr : [];
+          const parsed: BlockItem[] = [];
+          for (const b of list) {
+            if (isCtaBlock(b)) {
+              parsed.push({ kind: "cta", data: { type: "cta", text: b.text ?? "" } });
+            } else {
+              parsed.push({ kind: "content", data: blockToEdit(b) });
+            }
+          }
+          const hasCta = parsed.some((it) => it.kind === "cta");
+          if (!hasCta && data.wedding_cta) {
+            parsed.push({ kind: "cta", data: { type: "cta", text: data.wedding_cta } });
+          }
+          setItems(parsed);
         } catch {
-          setBlocks([]);
+          setItems([]);
         }
-        setCta(data.wedding_cta ?? "👉 Kontakta oss för lediga datum");
       })
       .catch(() => setMessage("Kunde inte ladda."))
       .finally(() => setLoading(false));
@@ -97,18 +116,15 @@ export default function AdminWeddingPage() {
     setSaving(true);
     setMessage("");
     try {
-      const outBlocks = blocks.map(editToBlock);
-      const resBlocks = await fetch("/api/admin/content", {
+      const outBlocks: (WeddingBlock | CtaBlock)[] = items.map((it) =>
+        it.kind === "cta" ? it.data : editToBlock(it.data)
+      );
+      const res = await fetch("/api/admin/content", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ key: "wedding_blocks", value: JSON.stringify(outBlocks) }),
       });
-      const resCta = await fetch("/api/admin/content", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: "wedding_cta", value: cta }),
-      });
-      setMessage(resBlocks.ok && resCta.ok ? "Sparat." : "Kunde inte spara.");
+      setMessage(res.ok ? "Sparat." : "Kunde inte spara.");
     } catch {
       setMessage("Kunde inte spara.");
     } finally {
@@ -116,69 +132,93 @@ export default function AdminWeddingPage() {
     }
   }
 
+  function moveBlock(i: number, delta: number) {
+    const j = i + delta;
+    if (j < 0 || j >= items.length) return;
+    setItems((prev) => {
+      const next = [...prev];
+      [next[i], next[j]] = [next[j], next[i]];
+      return next;
+    });
+  }
+
   function updateBlock(i: number, upd: Partial<ReturnType<typeof blockToEdit>>) {
-    setBlocks((prev) => prev.map((b, j) => (j === i ? { ...b, ...upd } : b)));
+    setItems((prev) =>
+      prev.map((it, j) => (j === i && it.kind === "content" ? { kind: "content" as const, data: { ...it.data, ...upd } } : it))
+    );
+  }
+
+  function updateCtaBlock(i: number, text: string) {
+    setItems((prev) =>
+      prev.map((it, j) => (j === i && it.kind === "cta" ? { kind: "cta" as const, data: { type: "cta", text } } : it))
+    );
   }
 
   function addBlock() {
-    setBlocks((prev) => [...prev, blockToEdit({ subtitle: "" })]);
+    setItems((prev) => [...prev, { kind: "content", data: blockToEdit({ subtitle: "" }) }]);
+  }
+
+  function addCtaBlock() {
+    setItems((prev) => [...prev, { kind: "cta", data: { type: "cta", text: "👉 Kontakta oss för lediga datum" } }]);
   }
 
   function removeBlock(i: number) {
     if (!confirm("Ta bort detta block?")) return;
-    setBlocks((prev) => prev.filter((_, j) => j !== i));
+    setItems((prev) => prev.filter((_, j) => j !== i));
   }
 
-  function addStep(i: number) {
-    setBlocks((prev) =>
-      prev.map((b, j) =>
-        j === i ? { ...b, steps: [...(b.steps ?? []), { title: "", text: "" }] } : b
-      )
+  function addStep(blockIdx: number) {
+    setItems((prev) =>
+      prev.map((it, j) => {
+        if (j !== blockIdx || it.kind !== "content") return it;
+        return { kind: "content" as const, data: { ...it.data, steps: [...(it.data.steps ?? []), { title: "", text: "" }] } };
+      })
     );
   }
   function updateStep(blockIdx: number, stepIdx: number, field: "title" | "text", value: string) {
-    setBlocks((prev) =>
-      prev.map((b, j) => {
-        if (j !== blockIdx || !b.steps) return b;
-        const next = [...b.steps];
-        next[stepIdx] = { ...next[stepIdx], [field]: value };
-        return { ...b, steps: next };
+    setItems((prev) =>
+      prev.map((it, j) => {
+        if (j !== blockIdx || it.kind !== "content" || !it.data.steps) return it;
+        const steps = [...it.data.steps];
+        steps[stepIdx] = { ...steps[stepIdx], [field]: value };
+        return { kind: "content" as const, data: { ...it.data, steps } };
       })
     );
   }
   function removeStep(blockIdx: number, stepIdx: number) {
-    setBlocks((prev) =>
-      prev.map((b, j) =>
-        j === blockIdx && b.steps
-          ? { ...b, steps: b.steps.filter((_, k) => k !== stepIdx) }
-          : b
+    setItems((prev) =>
+      prev.map((it, j) =>
+        j === blockIdx && it.kind === "content" && it.data.steps
+          ? { kind: "content" as const, data: { ...it.data, steps: it.data.steps.filter((_, k) => k !== stepIdx) } }
+          : it
       )
     );
   }
 
   function addItem(blockIdx: number) {
-    setBlocks((prev) =>
-      prev.map((b, j) =>
-        j === blockIdx ? { ...b, items: [...(b.items ?? []), { label: "", text: "" }] } : b
-      )
+    setItems((prev) =>
+      prev.map((it, j) => {
+        if (j !== blockIdx || it.kind !== "content") return it;
+        return { kind: "content" as const, data: { ...it.data, items: [...(it.data.items ?? []), { label: "", text: "" }] } };
+      })
     );
   }
   function updateItem(blockIdx: number, itemIdx: number, field: "label" | "text", value: string) {
-    setBlocks((prev) =>
-      prev.map((b, j) => {
-        if (j !== blockIdx || !b.items) return b;
-        const next = [...b.items];
-        next[itemIdx] = { ...next[itemIdx], [field]: value };
-        return { ...b, items: next };
+    setItems((prev) =>
+      prev.map((it, j) => {
+        if (j !== blockIdx || it.kind !== "content" || !it.data.items) return it;
+        const items = [...it.data.items];
+        items[itemIdx] = { ...items[itemIdx], [field]: value };
+        return { kind: "content" as const, data: { ...it.data, items } };
       })
     );
   }
   function removeItem(blockIdx: number, itemIdx: number) {
-    setBlocks((prev) =>
-      prev.map((b, j) =>
-        j === blockIdx && b.items
-          ? { ...b, items: b.items.filter((_, k) => k !== itemIdx) }
-          : b
+    setItems((prev) =>
+      prev.map((it, j) =>
+        j === blockIdx && it.kind === "content" && it.data.items
+          ? { kind: "content" as const, data: { ...it.data, items: it.data.items.filter((_, k) => k !== itemIdx) } }
+          : it
       )
     );
   }
@@ -187,9 +227,9 @@ export default function AdminWeddingPage() {
 
   return (
     <div className={styles.wrapper}>
-      <h1 className={g.adminPageTitle}>Bröllop</h1>
+      <h1 className={g.adminPageTitle}>Innehållssektion</h1>
       <p className={g.adminPageSubtitle}>
-        Redigera blocken i bröllopssektionen. Välj typ för varje block och fyll i fälten.
+        Ordningen här styr hur blocken visas på sidan. CTA-knappen är ett block som du kan flytta, lägga till eller ta bort.
       </p>
       {message && (
         <p className={`${message === "Sparat." ? g.adminMessageSuccess : g.adminMessageError} ${styles.message}`}>
@@ -197,165 +237,170 @@ export default function AdminWeddingPage() {
         </p>
       )}
 
-      <div className={styles.ctaSection}>
-        <label className={g.adminLabel}>Knapptext under sektionen (CTA)</label>
-        <input
-          type="text"
-          value={cta}
-          onChange={(e) => setCta(e.target.value)}
-          className={g.adminInput}
-          placeholder="👉 Kontakta oss för lediga datum"
-        />
-      </div>
-
       <div className={styles.blockList}>
-        {blocks.map((block, i) => (
+        {items.map((item, i) => (
           <div key={i} className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>Block {i + 1}</h3>
+              <div className={styles.cardHeaderLeft}>
+                <span className={styles.orderButtons}>
+                  <button type="button" onClick={() => moveBlock(i, -1)} disabled={i === 0} className={g.adminBtnSecondary} title="Flytta upp">↑</button>
+                  <button type="button" onClick={() => moveBlock(i, 1)} disabled={i === items.length - 1} className={g.adminBtnSecondary} title="Flytta ned">↓</button>
+                </span>
+                <h3 className={styles.cardTitle}>
+                  {item.kind === "cta" ? "CTA-knapp" : `Block ${items.slice(0, i).filter((x) => x.kind === "content").length + 1}`}
+                </h3>
+              </div>
               <button type="button" onClick={() => removeBlock(i)} className={g.adminBtnDanger}>
                 Ta bort block
               </button>
             </div>
-            <div className={styles.formRow}>
-              <label className={g.adminLabel}>Underrubrik</label>
-              <input
-                type="text"
-                value={block.subtitle}
-                onChange={(e) => updateBlock(i, { subtitle: e.target.value })}
-                className={g.adminInput}
-                placeholder="T.ex. Rubrik för detta block"
-              />
-            </div>
-            <div className={styles.formRow}>
-              <label className={g.adminLabel}>Typ av innehåll</label>
-              <select
-                value={block.type}
-                onChange={(e) => updateBlock(i, { type: e.target.value as BlockType })}
-                className={g.adminInput}
-              >
-                {(Object.keys(BLOCK_TYPE_LABELS) as BlockType[]).map((t) => (
-                  <option key={t} value={t}>{BLOCK_TYPE_LABELS[t]}</option>
-                ))}
-              </select>
-            </div>
 
-            {(block.type === "text" || block.type === "text_list") && (
+            {item.kind === "cta" ? (
               <div className={styles.formRow}>
-                <label className={g.adminLabel}>Brödtext (radbryt = nytt stycke)</label>
-                <textarea
-                  value={block.content}
-                  onChange={(e) => updateBlock(i, { content: e.target.value })}
-                  className={styles.textarea}
-                  rows={4}
+                <label className={g.adminLabel}>Knapptext</label>
+                <input
+                  type="text"
+                  value={item.data.text}
+                  onChange={(e) => updateCtaBlock(i, e.target.value)}
+                  className={g.adminInput}
+                  placeholder="👉 Kontakta oss för lediga datum"
                 />
               </div>
-            )}
-
-            {(block.type === "text_list" || block.type === "list") && (
-              <div className={styles.formRow}>
-                <label className={g.adminLabel}>Lista (en rad = en punkt)</label>
-                <textarea
-                  value={block.listText}
-                  onChange={(e) => updateBlock(i, { listText: e.target.value })}
-                  className={styles.textarea}
-                  rows={5}
-                  placeholder="Punkt 1&#10;Punkt 2&#10;Punkt 3"
-                />
-              </div>
-            )}
-
-            {block.type === "steps" && (
-              <div className={styles.formRow}>
-                <label className={g.adminLabel}>Steg</label>
-                {(block.steps ?? []).map((step, k) => (
-                  <div key={k} className={styles.stepRow}>
-                    <input
-                      type="text"
-                      value={step.title}
-                      onChange={(e) => updateStep(i, k, "title", e.target.value)}
-                      className={g.adminInput}
-                      placeholder="Titel"
-                    />
-                    <input
-                      type="text"
-                      value={step.text}
-                      onChange={(e) => updateStep(i, k, "text", e.target.value)}
-                      className={g.adminInput}
-                      placeholder="Text"
-                    />
-                    <button type="button" onClick={() => removeStep(i, k)} className={g.adminBtnDanger}>
-                      Ta bort
-                    </button>
-                  </div>
-                ))}
-                <button type="button" onClick={() => addStep(i)} className={g.adminBtnSecondary}>
-                  + Lägg till steg
-                </button>
-              </div>
-            )}
-
-            {block.type === "items" && (
-              <div className={styles.formRow}>
-                <label className={g.adminLabel}>Punkter (etikett + text)</label>
-                {(block.items ?? []).map((item, k) => (
-                  <div key={k} className={styles.itemRow}>
-                    <input
-                      type="text"
-                      value={item.label}
-                      onChange={(e) => updateItem(i, k, "label", e.target.value)}
-                      className={g.adminInput}
-                      placeholder="Etikett (t.ex. 🎵 Ceremoni)"
-                    />
-                    <input
-                      type="text"
-                      value={item.text}
-                      onChange={(e) => updateItem(i, k, "text", e.target.value)}
-                      className={g.adminInput}
-                      placeholder="Text"
-                    />
-                    <button type="button" onClick={() => removeItem(i, k)} className={g.adminBtnDanger}>
-                      Ta bort
-                    </button>
-                  </div>
-                ))}
-                <button type="button" onClick={() => addItem(i)} className={g.adminBtnSecondary}>
-                  + Lägg till punkt
-                </button>
-              </div>
-            )}
-
-            {block.type === "intro_outro" && (
+            ) : (
               <>
                 <div className={styles.formRow}>
-                  <label className={g.adminLabel}>Intro (text före listan)</label>
+                  <label className={g.adminLabel}>Underrubrik</label>
                   <input
                     type="text"
-                    value={block.intro}
-                    onChange={(e) => updateBlock(i, { intro: e.target.value })}
+                    value={item.data.subtitle}
+                    onChange={(e) => updateBlock(i, { subtitle: e.target.value })}
                     className={g.adminInput}
-                    placeholder="T.ex. Ett bröllop där:"
+                    placeholder="T.ex. Rubrik för detta block"
                   />
                 </div>
                 <div className={styles.formRow}>
-                  <label className={g.adminLabel}>Lista (en rad = en punkt)</label>
-                  <textarea
-                    value={block.listText}
-                    onChange={(e) => updateBlock(i, { listText: e.target.value })}
-                    className={styles.textarea}
-                    rows={4}
-                  />
-                </div>
-                <div className={styles.formRow}>
-                  <label className={g.adminLabel}>Outro (avslutande text)</label>
-                  <input
-                    type="text"
-                    value={block.outro}
-                    onChange={(e) => updateBlock(i, { outro: e.target.value })}
+                  <label className={g.adminLabel}>Typ av innehåll</label>
+                  <select
+                    value={item.data.type}
+                    onChange={(e) => updateBlock(i, { type: e.target.value as BlockType })}
                     className={g.adminInput}
-                    placeholder="T.ex. Avslutande text"
-                  />
+                  >
+                    {(Object.keys(BLOCK_TYPE_LABELS) as BlockType[]).map((t) => (
+                      <option key={t} value={t}>{BLOCK_TYPE_LABELS[t]}</option>
+                    ))}
+                  </select>
                 </div>
+
+                {(item.data.type === "text" || item.data.type === "text_list") && (
+                  <div className={styles.formRow}>
+                    <label className={g.adminLabel}>Brödtext (radbryt = nytt stycke)</label>
+                    <textarea
+                      value={item.data.content}
+                      onChange={(e) => updateBlock(i, { content: e.target.value })}
+                      className={styles.textarea}
+                      rows={4}
+                    />
+                  </div>
+                )}
+
+                {(item.data.type === "text_list" || item.data.type === "list") && (
+                  <div className={styles.formRow}>
+                    <label className={g.adminLabel}>Lista (en rad = en punkt)</label>
+                    <textarea
+                      value={item.data.listText}
+                      onChange={(e) => updateBlock(i, { listText: e.target.value })}
+                      className={styles.textarea}
+                      rows={5}
+                      placeholder="Punkt 1&#10;Punkt 2&#10;Punkt 3"
+                    />
+                  </div>
+                )}
+
+                {item.data.type === "steps" && (
+                  <div className={styles.formRow}>
+                    <label className={g.adminLabel}>Steg</label>
+                    {(item.data.steps ?? []).map((step, k) => (
+                      <div key={k} className={styles.stepRow}>
+                        <input
+                          type="text"
+                          value={step.title}
+                          onChange={(e) => updateStep(i, k, "title", e.target.value)}
+                          className={g.adminInput}
+                          placeholder="Titel"
+                        />
+                        <input
+                          type="text"
+                          value={step.text}
+                          onChange={(e) => updateStep(i, k, "text", e.target.value)}
+                          className={g.adminInput}
+                          placeholder="Text"
+                        />
+                        <button type="button" onClick={() => removeStep(i, k)} className={g.adminBtnDanger}>Ta bort</button>
+                      </div>
+                    ))}
+                    <button type="button" onClick={() => addStep(i)} className={g.adminBtnSecondary}>+ Lägg till steg</button>
+                  </div>
+                )}
+
+                {item.data.type === "items" && (
+                  <div className={styles.formRow}>
+                    <label className={g.adminLabel}>Punkter (etikett + text)</label>
+                    {(item.data.items ?? []).map((itemRow, k) => (
+                      <div key={k} className={styles.itemRow}>
+                        <input
+                          type="text"
+                          value={itemRow.label}
+                          onChange={(e) => updateItem(i, k, "label", e.target.value)}
+                          className={g.adminInput}
+                          placeholder="Etikett (t.ex. 🎵 Ceremoni)"
+                        />
+                        <input
+                          type="text"
+                          value={itemRow.text}
+                          onChange={(e) => updateItem(i, k, "text", e.target.value)}
+                          className={g.adminInput}
+                          placeholder="Text"
+                        />
+                        <button type="button" onClick={() => removeItem(i, k)} className={g.adminBtnDanger}>Ta bort</button>
+                      </div>
+                    ))}
+                    <button type="button" onClick={() => addItem(i)} className={g.adminBtnSecondary}>+ Lägg till punkt</button>
+                  </div>
+                )}
+
+                {item.data.type === "intro_outro" && (
+                  <>
+                    <div className={styles.formRow}>
+                      <label className={g.adminLabel}>Intro (text före listan)</label>
+                      <input
+                        type="text"
+                        value={item.data.intro}
+                        onChange={(e) => updateBlock(i, { intro: e.target.value })}
+                        className={g.adminInput}
+                        placeholder="T.ex. Ett bröllop där:"
+                      />
+                    </div>
+                    <div className={styles.formRow}>
+                      <label className={g.adminLabel}>Lista (en rad = en punkt)</label>
+                      <textarea
+                        value={item.data.listText}
+                        onChange={(e) => updateBlock(i, { listText: e.target.value })}
+                        className={styles.textarea}
+                        rows={4}
+                      />
+                    </div>
+                    <div className={styles.formRow}>
+                      <label className={g.adminLabel}>Outro (avslutande text)</label>
+                      <input
+                        type="text"
+                        value={item.data.outro}
+                        onChange={(e) => updateBlock(i, { outro: e.target.value })}
+                        className={g.adminInput}
+                        placeholder="T.ex. Avslutande text"
+                      />
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -363,14 +408,13 @@ export default function AdminWeddingPage() {
       </div>
 
       <div className={styles.blockActions}>
-        <button type="button" onClick={addBlock} className={g.adminBtnSecondary}>
-          + Lägg till block
-        </button>
+        <button type="button" onClick={addBlock} className={g.adminBtnSecondary}>+ Lägg till innehållsblock</button>
+        <button type="button" onClick={addCtaBlock} className={g.adminBtnSecondary}>+ Lägg till CTA-block</button>
       </div>
 
       <div className={styles.actions}>
         <button type="button" onClick={handleSave} disabled={saving} className={g.adminBtnPrimary}>
-          {saving ? "Sparar..." : "Spara alla block och CTA"}
+          {saving ? "Sparar..." : "Spara ordning och innehåll"}
         </button>
       </div>
     </div>

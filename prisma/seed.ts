@@ -58,6 +58,7 @@ const weddingBlocks = [
     list: ["ni kan vara helt närvarande", "gästerna känner stämningen", "musiken blir en naturlig del av minnet"],
     outro: "Stockholm Music Group – vi guidar er till ett bröllop som känns lika bra som det låter.",
   },
+  { type: "cta", text: "👉 Kontakta oss för lediga datum" },
 ];
 
 async function main() {
@@ -98,7 +99,6 @@ Med sin kombination av musikalisk värme, bred repertoar och lyhördhet inför p
     { key: "footer_copyright", value: "© Stockholm Music Group 2026. All rights reserved." },
     /* footer_madeby_text och footer_madeby_url finns inte – styrs enbart i koden (Footer.tsx) */
     { key: "media_section_title", value: "Media" },
-    { key: "wedding_cta", value: "👉 Kontakta oss för lediga datum" },
   ];
 
   for (const entry of contentEntries) {
