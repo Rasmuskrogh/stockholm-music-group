@@ -11,6 +11,8 @@ const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
 const DEFAULT_ADMIN_PASSWORD = "BytMig123!";
+const RECIPIENT_EMAIL = process.env.RECIPIENT_EMAIL;
+if (!RECIPIENT_EMAIL) throw new Error("RECIPIENT_EMAIL is not set");
 
 const weddingBlocks = [
   {
@@ -65,10 +67,10 @@ async function main() {
   const hash = await bcrypt.hash(DEFAULT_ADMIN_PASSWORD, 10);
 
   await prisma.user.upsert({
-    where: { email: "admin@stockholmmusicgroup.com" },
+    where: { email: RECIPIENT_EMAIL },
     update: {},
     create: {
-      email: "admin@stockholmmusicgroup.com",
+      email: RECIPIENT_EMAIL,
       name: "Admin",
       passwordHash: hash,
     },
@@ -121,7 +123,7 @@ Med sin kombination av musikalisk värme, bred repertoar och lyhördhet inför p
     await prisma.mediaVideo.create({ data: v });
   }
 
-  console.log("Seed done. Admin login: admin@stockholmmusicgroup.com /", DEFAULT_ADMIN_PASSWORD);
+  console.log("Seed done. Admin login:", RECIPIENT_EMAIL, "/", DEFAULT_ADMIN_PASSWORD);
 }
 
 main()
