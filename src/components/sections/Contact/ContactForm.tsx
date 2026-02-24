@@ -8,15 +8,27 @@ export default function ContactForm() {
     email: "",
     tel: "",
     message: "",
+    date: "",
+    place: "",
+    music: "",
+    terms: false,
+    agree: false,
+    info: false,
+    website: "", // honeypot – ska vara tom
   });
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value =
+      e.target.type === "checkbox"
+        ? (e.target as HTMLInputElement).checked
+        : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +45,19 @@ export default function ContactForm() {
       });
 
       if (response.ok) {
-        setFormData({ name: "", email: "", tel: "", message: "" });
+        setFormData({
+          name: "",
+          email: "",
+          tel: "",
+          message: "",
+          date: "",
+          place: "",
+          music: "",
+          terms: false,
+          agree: false,
+          info: false,
+          website: "",
+        });
         setStatus("success");
       } else {
         setStatus("error");
@@ -47,6 +71,19 @@ export default function ContactForm() {
   return (
     <div className={styles.formWrapper}>
       <form onSubmit={handleSubmit} className={styles.form}>
+        {/* Honeypot – dolt för användare, bottar fyller ofta i */}
+        <div className={styles.honeypot} aria-hidden="true">
+          <label htmlFor="website">Lämna tom</label>
+          <input
+            type="text"
+            id="website"
+            name="website"
+            value={formData.website}
+            onChange={handleChange}
+            tabIndex={-1}
+            autoComplete="off"
+          />
+        </div>
         <label className={styles.label}>
           {/*     <span className={styles.labelText}>Name</span> */}
           <input
@@ -56,7 +93,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Ditt namn *"
+            placeholder="Namn *"
           />
         </label>
 
@@ -69,33 +106,97 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Din e-post *"
+            placeholder="E-postadress *"
           />
         </label>
-        {/* <label className={styles.label}>
-          <span className={styles.labelText}>Phone number</span>
+        <label className={styles.label}>
           <input
             type="tel"
             name="tel"
             value={formData.tel}
             onChange={handleChange}
-            required
             className={styles.input}
-            placeholder="Your phone number"
+            placeholder="Telefonnummer"
           />
-        </label> */}
+        </label>
         <label className={styles.label}>
           {/*  <span className={styles.labelText}>Message</span> */}
-          <textarea
-            name="message"
-            value={formData.message}
+          <input
+            type="text"
+            name="date"
+            value={formData.date}
             onChange={handleChange}
             required
-            className={styles.textarea}
-            placeholder="Ditt meddelande *"
-          ></textarea>
+            className={styles.input}
+            placeholder="Datum för bröllopet *"
+          />
         </label>
-
+        <label className={styles.label}>
+          {/*  <span className={styles.labelText}>Message</span> */}
+          <input
+            type="text"
+            name="place"
+            value={formData.place}
+            onChange={handleChange}
+            required
+            className={styles.input}
+            placeholder="Plats för bröllopet (stad/region) *"
+          />
+        </label>
+        <label className={styles.label}>
+          {/*  <span className={styles.labelText}>Message</span> */}
+          <input
+            type="text"
+            name="music"
+            value={formData.music}
+            onChange={handleChange}
+            className={styles.input}
+            placeholder="Önskad låt eller musikstil"
+          />
+        </label>
+        <div className={styles.checkboxRow}>
+          <input
+            type="checkbox"
+            id="terms"
+            name="terms"
+            checked={formData.terms}
+            onChange={handleChange}
+            className={styles.checkbox}
+            required
+          />
+          <label htmlFor="terms" className={styles.checkboxLabel}>
+            Jag godkänner tävlingsvillkoren *
+          </label>
+        </div>
+        <div className={styles.checkboxRow}>
+          <input
+            type="checkbox"
+            id="agree"
+            name="agree"
+            checked={formData.agree}
+            onChange={handleChange}
+            className={styles.checkbox}
+            required
+          />
+          <label htmlFor="agree" className={styles.checkboxLabel}>
+            Jag samtycker till att SMG behandlar mina personuppgifter för att
+            administrera tävlingen *
+          </label>
+        </div>
+        <div className={styles.checkboxRow}>
+          <input
+            type="checkbox"
+            id="info"
+            name="info"
+            checked={formData.info}
+            onChange={handleChange}
+            className={styles.checkbox}
+          />
+          <label htmlFor="info" className={styles.checkboxLabel}>
+            Jag samtycker till att SMG kontaktar mig med information om
+            framtida spelningar och erbjudanden
+          </label>
+        </div>
         <button
           type="submit"
           disabled={status === "submitting"}
@@ -112,8 +213,8 @@ export default function ContactForm() {
 
         {status === "error" && (
           <div className={styles.errorMessage}>
-            Jag ber om ursäkt, det blev ett fel när ditt meddelande skulle
-            skickas. Vänligen forsök igen.
+            {errorMessage ||
+              "Jag ber om ursäkt, det blev ett fel när ditt meddelande skulle skickas. Vänligen försök igen."}
           </div>
         )}
       </form>

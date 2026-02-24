@@ -42,6 +42,18 @@
   justify-content: center;
 }
 
+/* ===== HONEYPOT (dolt för användare) ===== */
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
 /* ===== FORMULÄRELEMENT ===== */
 
 .label {
@@ -60,7 +72,9 @@
 .input {
   width: 100%;
   padding: 0.75rem;
-  transition: border-color 0.15s ease-in-out, opacity 0.3s ease;
+  transition:
+    border-color 0.15s ease-in-out,
+    opacity 0.3s ease;
 }
 
 .input::placeholder,
@@ -83,7 +97,10 @@
   padding: 0.75rem;
   resize: none;
   height: 3.1rem;
-  transition: border-color 0.15s ease-in-out, height 500ms ease, opacity 0.3s ease;
+  transition:
+    border-color 0.15s ease-in-out,
+    height 500ms ease,
+    opacity 0.3s ease;
 }
 
 .textarea:hover {
@@ -105,7 +122,7 @@
   color: #ffffff;
   padding: 0.75rem;
   font-family: "Inter", sans-serif;
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s ease-in-out;
@@ -119,6 +136,36 @@
 .submitButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ===== CHECKBOXAR ===== */
+
+.checkboxRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  accent-color: white;
+  cursor: pointer;
+}
+
+.checkboxLabel {
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.checkboxLabel:hover {
+  opacity: 0.9;
 }
 
 /* ===== MEDDELANDEN ===== */
