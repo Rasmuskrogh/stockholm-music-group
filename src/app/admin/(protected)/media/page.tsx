@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import g from "../AdminGlobal.module.css";
+import g from "../../AdminGlobal.module.css";
 
 type Video = { id: string; composer: string; title: string; youtubeId: string; sortOrder: number };
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import g from "../AdminGlobal.module.css";
+import g from "../../AdminGlobal.module.css";
 
 // Samma struktur som Wedding.tsx för att spara/visa
 type WeddingBlock = {

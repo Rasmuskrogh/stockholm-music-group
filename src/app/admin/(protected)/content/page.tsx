@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import g from "../AdminGlobal.module.css";
+import g from "../../AdminGlobal.module.css";
 
 /** Endast dessa nycklar kan redigeras här. Bröllop redigeras under Bröllop-sidan. "Made by" styrs enbart i koden. */
 const CONTENT_LABELS: Record<string, string> = {
