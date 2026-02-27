@@ -64,12 +64,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Invalid email format" }, { status: 400 });
     }
 
-    // Skapa transporter för nodemailer
+    // Skapa transporter för nodemailer (explicit host/port så det fungerar på Netlify)
     const transporter = nodemailer.createTransport({
-      service: process.env.EMAIL_SERVICE || "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: true,
       },
     });
 
