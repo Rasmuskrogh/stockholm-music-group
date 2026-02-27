@@ -139,6 +139,7 @@
 }
 
 /* ===== CHECKBOXAR ===== */
+/* Custom styling så att kryssrutor ser likadana ut på desktop och mobil */
 
 .checkboxRow {
   display: flex;
@@ -148,12 +149,39 @@
 }
 
 .checkbox {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
   margin-top: 0.2rem;
   flex-shrink: 0;
-  accent-color: white;
   cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid white;
+  border-radius: 0.25rem;
+  background-color: transparent;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.checkbox:checked {
+  background-color: white;
+  border-color: white;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: 75%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.checkbox:focus {
+  outline: 2px solid white;
+  outline-offset: 2px;
 }
 
 .checkboxLabel {
