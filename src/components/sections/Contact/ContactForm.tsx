@@ -33,6 +33,7 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
     setStatus("submitting");
 
     try {
@@ -60,10 +61,15 @@ export default function ContactForm() {
         });
         setStatus("success");
       } else {
+        const data = await response.json().catch(() => ({}));
+        setErrorMessage(
+          typeof data?.message === "string" ? data.message : ""
+        );
         setStatus("error");
       }
     } catch (error) {
       console.error("Error submitting form:", error);
+      setErrorMessage("");
       setStatus("error");
     }
   };
