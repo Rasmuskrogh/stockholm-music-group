@@ -160,7 +160,7 @@ export default function ContactForm() {
             placeholder="Önskad låt eller musikstil"
           />
         </label>
-        <div className={styles.checkboxRow}>
+        {/* <div className={styles.checkboxRow}>
           <input
             type="checkbox"
             id="terms"
@@ -188,7 +188,7 @@ export default function ContactForm() {
             Jag samtycker till att SMG behandlar mina personuppgifter för att
             administrera tävlingen *
           </label>
-        </div>
+        </div> */}
         <div className={styles.checkboxRow}>
           <input
             type="checkbox"
