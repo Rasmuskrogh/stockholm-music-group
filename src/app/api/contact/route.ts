@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obligatoriska fält
-    if (!name || !email || !date || !place || !terms || !agree) {
+    if (!name || !email || !date || !place /* || !terms || !agree */) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
