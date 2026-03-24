@@ -16,11 +16,34 @@ const defaultCopyright = "© Stockholm Music Group 2026. All rights reserved.";
 const defaultMadeByText = "Rasmus Krogh-Andersen";
 const defaultMadeByUrl = "https://portfolio-page-next-js.vercel.app/";
 
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+}
+
 function Footer() {
   const [contactInfo, setContactInfo] = useState<ContactInfo | null>(null);
   const [copyright, setCopyright] = useState(defaultCopyright);
   const [madeByText] = useState(defaultMadeByText);
   const [madeByUrl] = useState(defaultMadeByUrl);
+  const [copied, setCopied] = useState<"phone" | "email" | null>(null);
 
   useEffect(() => {
     fetch("/api/contact-info")
@@ -43,8 +66,14 @@ function Footer() {
     return (
       <Section>
         <div className={styles.footerContact}>
-          <span><Image src="/images/phone.svg" alt="Phone icon" width={20} height={20} /> <span>Telefon</span></span>
-          <span><Image src="/images/mail.svg" alt="Mail icon" width={20} height={20} /> <span>E-post</span></span>
+          <div className={styles.contactRow}>
+            <Image src="/images/phone.svg" alt="" width={20} height={20} />
+            <span>Telefon</span>
+          </div>
+          <div className={styles.contactRow}>
+            <Image src="/images/mail.svg" alt="" width={20} height={20} />
+            <span>E-post</span>
+          </div>
         </div>
         <div className={styles.footerContent}>
           <div className={styles.spacer}></div>
@@ -57,11 +86,40 @@ function Footer() {
     );
   }
 
+  const handleCopy = async (value: string, kind: "phone" | "email") => {
+    const ok = await copyText(value);
+    if (!ok) return;
+    setCopied(kind);
+    window.setTimeout(() => setCopied(null), 2000);
+  };
+
   return (
     <Section>
       <div className={styles.footerContact}>
-        <span><Image src="/images/phone.svg" alt="Phone icon" width={20} height={20} /> <Link href={`tel:${contactInfo.phone}`}>Telefon</Link></span>
-        <span><Image src="/images/mail.svg" alt="Mail icon" width={20} height={20} /> <Link href={`mailto:${contactInfo.email}`}>E-post</Link></span>
+        <div className={styles.contactRow}>
+          <Image src="/images/phone.svg" alt="" width={20} height={20} />
+          <Link href={`tel:${contactInfo.phone}`}>Telefon</Link>
+          <button
+            type="button"
+            className={styles.copyButton}
+            onClick={() => void handleCopy(contactInfo.phone, "phone")}
+            aria-label="Kopiera telefonnummer"
+          >
+            {copied === "phone" ? "Kopierat!" : "Kopiera"}
+          </button>
+        </div>
+        <div className={styles.contactRow}>
+          <Image src="/images/mail.svg" alt="" width={20} height={20} />
+          <Link href={`mailto:${contactInfo.email}`}>E-post</Link>
+          <button
+            type="button"
+            className={styles.copyButton}
+            onClick={() => void handleCopy(contactInfo.email, "email")}
+            aria-label="Kopiera e-postadress"
+          >
+            {copied === "email" ? "Kopierat!" : "Kopiera"}
+          </button>
+        </div>
       </div>
       <div className={styles.footerContent}>
         <div className={styles.spacer}></div>

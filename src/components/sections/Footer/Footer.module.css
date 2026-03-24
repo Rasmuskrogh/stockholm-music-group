@@ -7,30 +7,85 @@
   justify-content: center;
 }
 
-.footerContact span {
-  display: flex;
-  gap: 0.5rem;
+.contactRow {
+  display: grid;
+  grid-template-columns: 2.25rem 7.5rem minmax(7.25rem, auto);
+  column-gap: 0.75rem;
+  align-items: center;
   font-size: 1.3rem;
 }
 
-.footerContact span a {
+.footerContact .contactRow a {
   text-decoration: none;
   color: white;
   transition: color 0.3s ease, opacity 0.3s ease, text-decoration 0.3s ease;
 }
 
-.footerContact span a:hover {
+.footerContact .contactRow a:hover {
   color: rgba(255, 255, 255, 0.8);
   opacity: 0.9;
   text-decoration: underline;
 }
 
-.footerContact span img {
+.footerContact .contactRow img {
   display: block;
   filter: brightness(0) invert(1);
   align-self: center;
   height: 30px;
   width: 30px;
+}
+
+.footerContact .contactRow > span {
+  color: white;
+}
+
+.footerContact .contactRow > a,
+.footerContact .contactRow > span {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.copyButton {
+  display: none;
+  justify-self: start;
+  min-width: 7rem;
+  padding: 0.35rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.copyButton:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.copyButton:active {
+  opacity: 0.92;
+}
+
+.copyButton:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+@media (min-width: 1196px) {
+  .copyButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .footerContent {
