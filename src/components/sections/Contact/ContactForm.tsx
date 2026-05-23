@@ -134,7 +134,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Datum för bröllopet *"
+            placeholder="Datum för eventet *"
           />
         </label>
         <label className={styles.label}>
@@ -146,7 +146,7 @@ export default function ContactForm() {
             onChange={handleChange}
             required
             className={styles.input}
-            placeholder="Plats för bröllopet (stad/region) *"
+            placeholder="Plats för eventet (stad/region) *"
           />
         </label>
         <label className={styles.label}>
