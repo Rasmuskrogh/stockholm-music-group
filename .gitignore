@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# migration snapshots (raw production data)
+/migration/extracted/
+/migration/reports/
