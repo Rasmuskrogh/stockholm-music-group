@@ -1,0 +1,4 @@
+[build.environment]
+  # These hold SMG's public contact address, which is shown in the footer on
+  # purpose. EMAIL_PASS is still scanned.
+  SECRETS_SCAN_OMIT_KEYS = "RECIPIENT_EMAIL,EMAIL_USER"
