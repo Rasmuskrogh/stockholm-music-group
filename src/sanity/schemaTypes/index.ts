@@ -4,6 +4,8 @@ import siteSettings from "./documents/siteSettings";
 import contentBlock from "./objects/contentBlock";
 import ctaBlock from "./objects/ctaBlock";
 import youtubeVideo from "./objects/youtubeVideo";
+import formInput from "./objects/formInput";
+import formCheckbox from "./objects/formCheckbox";
 import heroSection from "./sections/heroSection";
 import textSection from "./sections/textSection";
 import contactSection from "./sections/contactSection";
@@ -18,6 +20,8 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     contentBlock,
     ctaBlock,
     youtubeVideo,
+    formInput,
+    formCheckbox,
     heroSection,
     textSection,
     contactSection,

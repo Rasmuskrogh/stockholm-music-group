@@ -10,6 +10,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import { siteQuery } from "@/lib/queries";
 import type { GalleryImage, PageSection, SanityGalleryImage, SiteData, SocialLink } from "@/types";
+import { DEFAULT_FORM_FIELDS } from "@/lib/bookingForm";
 
 // Published edits in the Studio show up on the live site within a minute.
 export const revalidate = 60;
@@ -61,7 +62,16 @@ function Section({ section, socialLinks }: { section: PageSection; socialLinks: 
     case "textSection":
       return <Wedding blocks={section.blocks ?? []} />;
     case "contactSection":
-      return <Contact title={section.title} />;
+      return (
+        <Contact
+          title={section.title}
+          form={{
+            fields: section.fields?.length ? section.fields : DEFAULT_FORM_FIELDS,
+            submitLabel: section.submitLabel,
+            successMessage: section.successMessage,
+          }}
+        />
+      );
     case "mediaSection":
       return <Media title={section.title} videos={section.videos ?? []} socialLinks={socialLinks} />;
     case "bioSection":

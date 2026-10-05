@@ -217,3 +217,19 @@
   font-family: "Inter", sans-serif;
   text-align: center;
 }
+
+/* "Lång text" fields — taller than the one-line inputs, and resizable. */
+.textareaTall {
+  height: auto;
+  min-height: 6rem;
+  resize: vertical;
+  font: inherit;
+}
+
+/* Visible caption above a date field, which has no placeholder of its own. */
+.dateCaption {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: white;
+  font-size: 0.95rem;
+}

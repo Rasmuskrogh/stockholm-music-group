@@ -1,4 +1,5 @@
 import type { SanityImageCrop, SanityImageHotspot } from "@sanity/image-url";
+import type { BookingFormField } from "@/lib/bookingForm";
 
 export interface VideoCardProps {
   composer: string;
@@ -51,7 +52,14 @@ export type SanityGalleryImage = {
 export type PageSection =
   | { _key: string; _type: "heroSection"; title?: string; subtitle?: string; ctaText?: string; videoUrl?: string }
   | { _key: string; _type: "textSection"; blocks?: (ContentBlock | CtaBlock)[] }
-  | { _key: string; _type: "contactSection"; title?: string }
+  | {
+      _key: string;
+      _type: "contactSection";
+      title?: string;
+      fields?: BookingFormField[];
+      submitLabel?: string;
+      successMessage?: string;
+    }
   | { _key: string; _type: "mediaSection"; title?: string; videos?: ({ _key: string } & VideoCardProps)[] }
   | { _key: string; _type: "bioSection"; text?: string }
   | { _key: string; _type: "gallerySection"; images?: SanityGalleryImage[] };

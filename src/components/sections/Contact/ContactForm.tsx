@@ -1,34 +1,40 @@
 "use client";
 import { useState } from "react";
+import {
+  DEFAULT_SUBMIT_LABEL,
+  DEFAULT_SUCCESS_MESSAGE,
+  HTML_INPUT_TYPE,
+  type BookingFormConfig,
+} from "@/lib/bookingForm";
 import styles from "./ContactForm.module.css";
 
-export default function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    tel: "",
-    message: "",
-    date: "",
-    place: "",
-    music: "",
-    terms: false,
-    agree: false,
-    info: false,
-    website: "", // honeypot – ska vara tom
-  });
+type Values = Record<string, string | boolean>;
+
+/** Fields come from the Studio (contactSection.fields), keyed by their _key. */
+export default function ContactForm({ config }: { config: BookingFormConfig }) {
+  const emptyValues = (): Values =>
+    Object.fromEntries(
+      config.fields.map((f) => [
+        f._key,
+        f._type === "formCheckbox" ? false : "",
+      ]),
+    );
+
+  const [values, setValues] = useState<Values>(emptyValues);
+  const [website, setWebsite] = useState(""); // honeypot – ska vara tom
   const [status, setStatus] = useState<
     "idle" | "submitting" | "success" | "error"
   >("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const value =
       e.target.type === "checkbox"
         ? (e.target as HTMLInputElement).checked
         : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
+    setValues({ ...values, [e.target.name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,32 +45,17 @@ export default function ContactForm() {
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ values, website }),
       });
 
       if (response.ok) {
-        setFormData({
-          name: "",
-          email: "",
-          tel: "",
-          message: "",
-          date: "",
-          place: "",
-          music: "",
-          terms: false,
-          agree: false,
-          info: false,
-          website: "",
-        });
+        setValues(emptyValues());
+        setWebsite("");
         setStatus("success");
       } else {
         const data = await response.json().catch(() => ({}));
-        setErrorMessage(
-          typeof data?.message === "string" ? data.message : ""
-        );
+        setErrorMessage(typeof data?.message === "string" ? data.message : "");
         setStatus("error");
       }
     } catch (error) {
@@ -84,136 +75,83 @@ export default function ContactForm() {
             type="text"
             id="website"
             name="website"
-            value={formData.website}
-            onChange={handleChange}
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
             tabIndex={-1}
             autoComplete="off"
           />
         </div>
-        <label className={styles.label}>
-          {/*     <span className={styles.labelText}>Name</span> */}
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            placeholder="Namn *"
-          />
-        </label>
 
-        <label className={styles.label}>
-          {/*      <span className={styles.labelText}>Email</span> */}
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            placeholder="E-postadress *"
-          />
-        </label>
-        <label className={styles.label}>
-          <input
-            type="tel"
-            name="tel"
-            value={formData.tel}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder="Telefonnummer"
-          />
-        </label>
-        <label className={styles.label}>
-          {/*  <span className={styles.labelText}>Message</span> */}
-          <input
-            type="text"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            placeholder="Datum för eventet *"
-          />
-        </label>
-        <label className={styles.label}>
-          {/*  <span className={styles.labelText}>Message</span> */}
-          <input
-            type="text"
-            name="place"
-            value={formData.place}
-            onChange={handleChange}
-            required
-            className={styles.input}
-            placeholder="Plats för eventet (stad/region) *"
-          />
-        </label>
-        <label className={styles.label}>
-          {/*  <span className={styles.labelText}>Message</span> */}
-          <input
-            type="text"
-            name="music"
-            value={formData.music}
-            onChange={handleChange}
-            className={styles.input}
-            placeholder="Önskad låt eller musikstil"
-          />
-        </label>
-        {/* <div className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            id="terms"
-            name="terms"
-            checked={formData.terms}
-            onChange={handleChange}
-            className={styles.checkbox}
-            required
-          />
-          <label htmlFor="terms" className={styles.checkboxLabel}>
-            Jag godkänner tävlingsvillkoren *
-          </label>
-        </div>
-        <div className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            id="agree"
-            name="agree"
-            checked={formData.agree}
-            onChange={handleChange}
-            className={styles.checkbox}
-            required
-          />
-          <label htmlFor="agree" className={styles.checkboxLabel}>
-            Jag samtycker till att SMG behandlar mina personuppgifter för att
-            administrera tävlingen *
-          </label>
-        </div> */}
-        <div className={styles.checkboxRow}>
-          <input
-            type="checkbox"
-            id="info"
-            name="info"
-            checked={formData.info}
-            onChange={handleChange}
-            className={styles.checkbox}
-          />
-          <label htmlFor="info" className={styles.checkboxLabel}>
-            Jag samtycker till att SMG kontaktar mig med information om
-            framtida spelningar och erbjudanden
-          </label>
-        </div>
+        {config.fields.map((field) => {
+          const text = `${field.label}${field.required ? " *" : ""}`;
+
+          if (field._type === "formCheckbox") {
+            const id = `field-${field._key}`;
+            return (
+              <div key={field._key} className={styles.checkboxRow}>
+                <input
+                  type="checkbox"
+                  id={id}
+                  name={field._key}
+                  checked={values[field._key] === true}
+                  onChange={handleChange}
+                  className={styles.checkbox}
+                  required={field.required}
+                />
+                <label htmlFor={id} className={styles.checkboxLabel}>
+                  {text}
+                </label>
+              </div>
+            );
+          }
+
+          return (
+            <label key={field._key} className={styles.label}>
+              {field.kind === "textarea" ? (
+                <textarea
+                  name={field._key}
+                  value={String(values[field._key] ?? "")}
+                  onChange={handleChange}
+                  required={field.required}
+                  className={`${styles.input} ${styles.textareaTall}`}
+                  placeholder={text}
+                  rows={4}
+                />
+              ) : (
+                <>
+                  {/* A date input can't show a placeholder, so its text goes above it. */}
+                  {field.kind === "date" ? (
+                    <span className={styles.dateCaption}>{text}</span>
+                  ) : null}
+                  <input
+                    type={HTML_INPUT_TYPE[field.kind] ?? "text"}
+                    name={field._key}
+                    value={String(values[field._key] ?? "")}
+                    onChange={handleChange}
+                    required={field.required}
+                    className={styles.input}
+                    placeholder={text}
+                    aria-label={text}
+                  />
+                </>
+              )}
+            </label>
+          );
+        })}
+
         <button
           type="submit"
           disabled={status === "submitting"}
           className={styles.submitButton}
         >
-          {status === "submitting" ? "Skickar..." : "Skicka"}
+          {status === "submitting"
+            ? "Skickar..."
+            : config.submitLabel || DEFAULT_SUBMIT_LABEL}
         </button>
 
         {status === "success" && (
           <div className={styles.successMessage}>
-            Tack! Ditt meddelande har skickats.
+            {config.successMessage || DEFAULT_SUCCESS_MESSAGE}
           </div>
         )}
 
