@@ -14,7 +14,7 @@ interface FooterProps {
 }
 
 const madeByText = "Rasmus Krogh-Andersen";
-const madeByUrl = "https://portfolio-page-next-js.vercel.app/";
+const madeByUrl = "https://www.kroghdev.se/";
 
 async function copyText(text: string): Promise<boolean> {
   try {
