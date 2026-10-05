@@ -37,8 +37,28 @@ export type CtaBlock = { _key: string; _type: "ctaBlock"; text: string };
 
 export type SocialLink = { _key: string; platform: string; url: string };
 
+export type SanityGalleryImage = {
+  _key: string;
+  alt?: string;
+  asset: { _ref: string };
+  crop?: SanityImageCrop;
+  hotspot?: SanityImageHotspot;
+  width: number;
+  height: number;
+  lqip?: string;
+};
+
+export type PageSection =
+  | { _key: string; _type: "heroSection"; title?: string; subtitle?: string; ctaText?: string; videoUrl?: string }
+  | { _key: string; _type: "textSection"; blocks?: (ContentBlock | CtaBlock)[] }
+  | { _key: string; _type: "contactSection"; title?: string }
+  | { _key: string; _type: "mediaSection"; title?: string; videos?: ({ _key: string } & VideoCardProps)[] }
+  | { _key: string; _type: "bioSection"; text?: string }
+  | { _key: string; _type: "gallerySection"; images?: SanityGalleryImage[] };
+
 export interface SiteData {
   home: {
+    sections?: PageSection[];
     heroTitle?: string;
     heroSubtitle?: string;
     heroCtaText?: string;
@@ -47,16 +67,7 @@ export interface SiteData {
     mediaTitle?: string;
     videos?: ({ _key: string } & VideoCardProps)[];
     bio?: string;
-    gallery?: {
-      _key: string;
-      alt?: string;
-      asset: { _ref: string };
-      crop?: SanityImageCrop;
-      hotspot?: SanityImageHotspot;
-      width: number;
-      height: number;
-      lqip?: string;
-    }[];
+    gallery?: SanityGalleryImage[];
   } | null;
   settings: {
     email?: string;

@@ -4,11 +4,11 @@ import ContactForm from "./ContactForm";
 
 //import styles from "./Contact.module.css";
 
-function Contact() {
+function Contact({ title }: { title?: string }) {
   return (
     <Section id="contact">
       <Container>
-        <h2>BOKA OSS</h2>
+        <h2>{title || "BOKA OSS"}</h2>
         <ContactForm />
       </Container>
     </Section>

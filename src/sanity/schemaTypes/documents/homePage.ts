@@ -1,79 +1,76 @@
 import { defineArrayMember, defineField, defineType } from "sanity";
 import { HomeIcon } from "@sanity/icons/Home";
 
-/** Singleton — the whole one-page site, section by section. */
+// Sections there can only be one of: the hero belongs at the top, and the
+// booking form is the target of every "Boka oss" button (#contact).
+const SINGLE_SECTIONS: Record<string, string> = {
+  heroSection: "Hero",
+  contactSection: "Bokningsformulär",
+};
+
+/**
+ * Singleton — the whole one-page site, built from sections that can be
+ * added, removed and reordered. The footer is always last and isn't a
+ * section.
+ *
+ * The fields below `sections` are the pre-section-builder layout, kept
+ * (hidden) only as a fallback while `sections` is empty — see
+ * src/app/(site)/page.tsx. They can be removed once every environment
+ * has been migrated (migration/sections.mjs).
+ */
 export default defineType({
   name: "homePage",
   title: "Startsida",
   type: "document",
   icon: HomeIcon,
-  groups: [
-    { name: "hero", title: "Hero", default: true },
-    { name: "intro", title: "Textblock" },
-    { name: "media", title: "Media" },
-    { name: "bio", title: "Bio" },
-    { name: "gallery", title: "Galleri" },
-  ],
   fields: [
-    defineField({ name: "heroTitle", title: "Rubrik", type: "string", group: "hero", initialValue: "Stockholm" }),
-    defineField({ name: "heroSubtitle", title: "Underrubrik", type: "string", group: "hero", initialValue: "Music Group" }),
-    defineField({ name: "heroCtaText", title: "Knapptext", type: "string", group: "hero", initialValue: "BOKA OSS" }),
     defineField({
-      name: "heroVideo",
-      title: "Bakgrundsvideo",
-      type: "file",
-      group: "hero",
-      options: { accept: "video/mp4,video/webm" },
-      description: "MP4, helst under ~5 MB. Spelas ljudlöst i loop.",
+      name: "sections",
+      title: "Sektioner",
+      type: "array",
+      description: "Sidan uppifrån och ned. Lägg till, ta bort eller dra för att ändra ordning. Footern ligger alltid sist.",
+      of: [
+        defineArrayMember({ type: "heroSection" }),
+        defineArrayMember({ type: "textSection" }),
+        defineArrayMember({ type: "contactSection" }),
+        defineArrayMember({ type: "mediaSection" }),
+        defineArrayMember({ type: "bioSection" }),
+        defineArrayMember({ type: "gallerySection" }),
+      ],
+      validation: (Rule) =>
+        Rule.custom((sections: { _type: string }[] | undefined) => {
+          for (const [type, title] of Object.entries(SINGLE_SECTIONS)) {
+            if ((sections ?? []).filter((s) => s._type === type).length > 1) {
+              return `Det får bara finnas en sektion av typen "${title}".`;
+            }
+          }
+          return true;
+        }),
     }),
 
+    // ---- Legacy layout (hidden fallback, see doc comment) ----
+    defineField({ name: "heroTitle", type: "string", hidden: true }),
+    defineField({ name: "heroSubtitle", type: "string", hidden: true }),
+    defineField({ name: "heroCtaText", type: "string", hidden: true }),
+    defineField({ name: "heroVideo", type: "file", hidden: true }),
     defineField({
       name: "contentBlocks",
-      title: "Textblock",
       type: "array",
-      group: "intro",
-      description: "Blocken under heron, i den här ordningen. Dra för att sortera.",
+      hidden: true,
       of: [defineArrayMember({ type: "contentBlock" }), defineArrayMember({ type: "ctaBlock" })],
     }),
-
-    defineField({ name: "mediaTitle", title: "Rubrik", type: "string", group: "media", initialValue: "Media" }),
-    defineField({
-      name: "videos",
-      title: "Videor",
-      type: "array",
-      group: "media",
-      of: [defineArrayMember({ type: "youtubeVideo" })],
-    }),
-
-    defineField({
-      name: "bio",
-      title: "Bio",
-      type: "text",
-      rows: 12,
-      group: "bio",
-      description: "Lämna en tom rad mellan stycken.",
-    }),
-
+    defineField({ name: "mediaTitle", type: "string", hidden: true }),
+    defineField({ name: "videos", type: "array", hidden: true, of: [defineArrayMember({ type: "youtubeVideo" })] }),
+    defineField({ name: "bio", type: "text", hidden: true }),
     defineField({
       name: "gallery",
-      title: "Bilder",
       type: "array",
-      group: "gallery",
-      description: "Dra för att sortera. Beskärning och fokuspunkt ställs in på varje bild.",
-      options: { layout: "grid" },
+      hidden: true,
       of: [
         defineArrayMember({
           type: "image",
           options: { hotspot: true },
-          fields: [
-            defineField({
-              name: "alt",
-              title: "Bildtext",
-              type: "string",
-              description: "Visas under bilden i förstoringsläget och läses upp av skärmläsare.",
-              validation: (Rule) => Rule.required(),
-            }),
-          ],
+          fields: [defineField({ name: "alt", type: "string" })],
         }),
       ],
     }),

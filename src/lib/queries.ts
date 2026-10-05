@@ -2,6 +2,30 @@ import { defineQuery } from "next-sanity";
 
 export const siteQuery = defineQuery(`{
   "home": *[_id == "homePage"][0]{
+    sections[]{
+      _key,
+      _type,
+      _type == "heroSection" => { title, subtitle, ctaText, "videoUrl": video.asset->url },
+      _type == "textSection" => {
+        blocks[]{ _key, _type, subtitle, content, intro, list, steps[]{ _key, title, text }, items[]{ _key, label, text }, outro, text }
+      },
+      _type == "contactSection" => { title },
+      _type == "mediaSection" => { title, videos[]{ _key, composer, title, youtubeId } },
+      _type == "bioSection" => { text },
+      _type == "gallerySection" => {
+        images[]{
+          _key,
+          alt,
+          asset,
+          crop,
+          hotspot,
+          "width": asset->metadata.dimensions.width,
+          "height": asset->metadata.dimensions.height,
+          "lqip": asset->metadata.lqip
+        }
+      }
+    },
+    // Legacy layout — used only while \`sections\` is empty.
     heroTitle,
     heroSubtitle,
     heroCtaText,
