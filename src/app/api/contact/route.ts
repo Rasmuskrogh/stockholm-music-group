@@ -2,7 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { client } from "@/sanity/lib/client";
 import { bookingFormQuery } from "@/lib/queries";
-import { DEFAULT_FORM_FIELDS, type BookingFormConfig, type BookingFormField } from "@/lib/bookingForm";
+import {
+  DEFAULT_FORM_FIELDS,
+  isRequired,
+  plainLabel,
+  type BookingFormConfig,
+  type BookingFormField,
+} from "@/lib/bookingForm";
 
 // Rate limit: max antal förfrågningar per IP inom tidsfönstret
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 min
@@ -60,7 +66,7 @@ function validate(fields: BookingFormField[], raw: Record<string, unknown>): { a
   for (const field of fields) {
     if (field._type === "formCheckbox") {
       const checked = raw[field._key] === true;
-      if (field.required && !checked) return { error: `Kryssa i: ${field.label}` };
+      if (isRequired(field) && !checked) return { error: `Kryssa i: ${plainLabel(field)}` };
       answers.push({ field, value: checked });
       continue;
     }
@@ -68,8 +74,8 @@ function validate(fields: BookingFormField[], raw: Record<string, unknown>): { a
     const value = typeof raw[field._key] === "string" ? (raw[field._key] as string).trim() : "";
     const max = field.kind === "textarea" ? MAX_LENGTH.long : MAX_LENGTH.short;
 
-    if (field.required && !value) return { error: `Fyll i: ${field.label}` };
-    if (value.length > max) return { error: `${field.label} är för långt` };
+    if (isRequired(field) && !value) return { error: `Fyll i: ${plainLabel(field)}` };
+    if (value.length > max) return { error: `${plainLabel(field)} är för långt` };
     if (value && field.kind === "email" && !EMAIL_RE.test(value)) return { error: "Ogiltig e-postadress" };
     if (value && field.kind === "name" && (value.length < 2 || !/[\p{L}]/u.test(value))) {
       return { error: "Ogiltigt namn" };
@@ -146,14 +152,14 @@ export async function POST(request: NextRequest) {
           </h2>
 
           <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            ${inputs.map((a) => row(a.field.label, (a.value as string) || "Inte angivet")).join("")}
+            ${inputs.map((a) => row(plainLabel(a.field), (a.value as string) || "Inte angivet")).join("")}
           </div>
 
           ${
             checkboxes.length
               ? `<div style="background-color: #f0f0f0; padding: 15px; border-radius: 8px; margin: 20px 0;">
                   <h3 style="color: #333; margin-top: 0;">Kryssrutor:</h3>
-                  ${checkboxes.map((a) => row(a.field.label, a.value ? "Ja" : "Nej")).join("")}
+                  ${checkboxes.map((a) => row(plainLabel(a.field), a.value ? "Ja" : "Nej")).join("")}
                 </div>`
               : ""
           }
@@ -188,7 +194,7 @@ export async function POST(request: NextRequest) {
               details.length
                 ? `<div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <h3 style="color: #333; margin-top: 0;">Dina uppgifter:</h3>
-                    ${details.map((a) => row(a.field.label, a.value as string)).join("")}
+                    ${details.map((a) => row(plainLabel(a.field), a.value as string)).join("")}
                   </div>`
                 : ""
             }

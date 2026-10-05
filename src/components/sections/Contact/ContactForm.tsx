@@ -4,6 +4,8 @@ import {
   DEFAULT_SUBMIT_LABEL,
   DEFAULT_SUCCESS_MESSAGE,
   HTML_INPUT_TYPE,
+  displayLabel,
+  isRequired,
   type BookingFormConfig,
 } from "@/lib/bookingForm";
 import styles from "./ContactForm.module.css";
@@ -83,7 +85,8 @@ export default function ContactForm({ config }: { config: BookingFormConfig }) {
         </div>
 
         {config.fields.map((field) => {
-          const text = `${field.label}${field.required ? " *" : ""}`;
+          const text = displayLabel(field);
+          const required = isRequired(field);
 
           if (field._type === "formCheckbox") {
             const id = `field-${field._key}`;
@@ -96,7 +99,7 @@ export default function ContactForm({ config }: { config: BookingFormConfig }) {
                   checked={values[field._key] === true}
                   onChange={handleChange}
                   className={styles.checkbox}
-                  required={field.required}
+                  required={required}
                 />
                 <label htmlFor={id} className={styles.checkboxLabel}>
                   {text}
@@ -112,7 +115,7 @@ export default function ContactForm({ config }: { config: BookingFormConfig }) {
                   name={field._key}
                   value={String(values[field._key] ?? "")}
                   onChange={handleChange}
-                  required={field.required}
+                  required={required}
                   className={`${styles.input} ${styles.textareaTall}`}
                   placeholder={text}
                   rows={4}
@@ -128,7 +131,7 @@ export default function ContactForm({ config }: { config: BookingFormConfig }) {
                     name={field._key}
                     value={String(values[field._key] ?? "")}
                     onChange={handleChange}
-                    required={field.required}
+                    required={required}
                     className={styles.input}
                     placeholder={text}
                     aria-label={text}

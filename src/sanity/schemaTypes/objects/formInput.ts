@@ -1,6 +1,6 @@
 import { defineField, defineType } from "sanity";
 import { EditIcon } from "@sanity/icons/Edit";
-import { FORM_INPUT_KINDS } from "../../../lib/bookingForm";
+import { FORM_INPUT_KINDS, displayLabel } from "../../../lib/bookingForm";
 
 export default defineType({
   name: "formInput",
@@ -12,7 +12,7 @@ export default defineType({
       name: "label",
       title: "Text i fältet",
       type: "string",
-      description: 'Visas i fältet och i mejlet, t.ex. "Datum för eventet". Obligatoriska fält får en * automatiskt.',
+      description: 'Visas i fältet och i mejlet, t.ex. "Datum för eventet". Avsluta med * för att göra fältet obligatoriskt.',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -24,12 +24,18 @@ export default defineType({
       initialValue: "text",
       validation: (Rule) => Rule.required(),
     }),
-    defineField({ name: "required", title: "Obligatoriskt", type: "boolean", initialValue: false }),
+    defineField({
+      name: "required",
+      title: "Obligatoriskt",
+      type: "boolean",
+      description: "Samma sak som att avsluta texten med *.",
+      initialValue: false,
+    }),
   ],
   preview: {
     select: { label: "label", kind: "kind", required: "required" },
     prepare: ({ label, kind, required }) => ({
-      title: `${label ?? "(utan text)"}${required ? " *" : ""}`,
+      title: label ? displayLabel({ label, required }) : "(utan text)",
       subtitle: FORM_INPUT_KINDS.find((k) => k.value === kind)?.title,
     }),
   },

@@ -47,6 +47,26 @@ export const HTML_INPUT_TYPE: Record<FormInputKind, string> = {
   textarea: "text",
 };
 
+/**
+ * A field is required if its "Obligatoriskt" box is ticked OR its text
+ * ends with "*" — editors tend to just type the asterisk. Used by both the
+ * form (the `required` attribute) and /api/contact (server-side check), so
+ * the two can't disagree.
+ */
+export function isRequired(field: Pick<BookingFormField, "label" | "required">): boolean {
+  return field.required === true || /\*\s*$/.test(field.label ?? "");
+}
+
+/** The field's text without a trailing "*" — for emails and error messages. */
+export function plainLabel(field: Pick<BookingFormField, "label">): string {
+  return (field.label ?? "").replace(/\s*\*\s*$/, "");
+}
+
+/** The text shown on the form: the plain text plus one " *" when required. */
+export function displayLabel(field: Pick<BookingFormField, "label" | "required">): string {
+  return `${plainLabel(field)}${isRequired(field) ? " *" : ""}`;
+}
+
 export const DEFAULT_SUBMIT_LABEL = "Skicka";
 export const DEFAULT_SUCCESS_MESSAGE = "Tack! Ditt meddelande har skickats.";
 
