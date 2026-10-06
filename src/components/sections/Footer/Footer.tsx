@@ -5,11 +5,13 @@ import Section from "@/components/ui/Section/Section";
 import Link from "next/link";
 import Image from "next/image";
 
+import type { FooterDocument } from "@/types";
 import styles from "./Footer.module.css";
 
 interface FooterProps {
   email?: string;
   phone?: string;
+  documents?: FooterDocument[];
   copyright?: string;
 }
 
@@ -38,7 +40,7 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-function Footer({ email, phone, copyright }: FooterProps) {
+function Footer({ email, phone, documents = [], copyright }: FooterProps) {
   const [copied, setCopied] = useState<"phone" | "email" | null>(null);
 
   const handleCopy = async (value: string, kind: "phone" | "email") => {
@@ -87,6 +89,22 @@ function Footer({ email, phone, copyright }: FooterProps) {
             <span>E-post</span>
           )}
         </div>
+        {documents.length ? (
+          <div className={styles.documents}>
+            {/* PDFs uploaded under Inställningar → Dokument i footern; open in a new tab. */}
+            {documents.map((doc) => (
+              <a
+                key={doc._key}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.documentButton}
+              >
+                {doc.label}
+              </a>
+            ))}
+          </div>
+        ) : null}
       </div>
       <div className={styles.footerContent}>
         <div className={styles.spacer}></div>

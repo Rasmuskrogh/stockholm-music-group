@@ -37,6 +37,37 @@ export default defineType({
         }),
       ],
     }),
+    defineField({
+      name: "footerDocuments",
+      title: "Dokument i footern",
+      type: "array",
+      description: "Knappar under telefon och e-post som öppnar en PDF, t.ex. integritetspolicyn. Lägg till, ta bort eller dra för att ändra ordning.",
+      of: [
+        defineArrayMember({
+          type: "object",
+          name: "footerDocument",
+          fields: [
+            defineField({
+              name: "label",
+              title: "Knapptext",
+              type: "string",
+              initialValue: "Privacy policy",
+              validation: (Rule) => Rule.required(),
+            }),
+            defineField({
+              name: "file",
+              title: "PDF",
+              type: "file",
+              options: { accept: "application/pdf" },
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: { title: "label", subtitle: "file.asset.originalFilename" },
+          },
+        }),
+      ],
+    }),
     defineField({ name: "copyright", title: "Copyright-text i footern", type: "string" }),
   ],
   preview: {

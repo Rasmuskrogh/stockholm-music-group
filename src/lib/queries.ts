@@ -52,5 +52,11 @@ export const siteQuery = defineQuery(`{
       "lqip": asset->metadata.lqip
     }
   },
-  "settings": *[_id == "siteSettings"][0]{ email, phone, socialLinks[]{ _key, platform, url }, copyright }
+  "settings": *[_id == "siteSettings"][0]{
+    email,
+    phone,
+    socialLinks[]{ _key, platform, url },
+    footerDocuments[defined(file.asset)]{ _key, label, "url": file.asset->url },
+    copyright
+  }
 }`);

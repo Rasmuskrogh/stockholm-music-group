@@ -38,6 +38,8 @@ export type CtaBlock = { _key: string; _type: "ctaBlock"; text: string };
 
 export type SocialLink = { _key: string; platform: string; url: string };
 
+export type FooterDocument = { _key: string; label: string; url: string };
+
 export type SanityGalleryImage = {
   _key: string;
   alt?: string;
@@ -81,6 +83,7 @@ export interface SiteData {
     email?: string;
     phone?: string;
     socialLinks?: SocialLink[];
+    footerDocuments?: FooterDocument[];
     copyright?: string;
   } | null;
 }

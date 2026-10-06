@@ -88,6 +88,42 @@
   }
 }
 
+/* Document buttons (e.g. privacy policy PDF) under phone and email —
+   same pill look as the copy buttons, but always visible. */
+.documents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+}
+
+.footerContact .documentButton {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: rgba(255, 255, 255, 0.95);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 9999px;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.footerContact .documentButton:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.footerContact .documentButton:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
 .footerContent {
   display: flex;
   align-items: center;

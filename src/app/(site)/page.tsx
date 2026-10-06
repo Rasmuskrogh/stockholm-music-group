@@ -92,7 +92,12 @@ async function page() {
       {sections.map((section) => (
         <Section key={section._key} section={section} socialLinks={settings?.socialLinks ?? []} />
       ))}
-      <Footer email={settings?.email} phone={settings?.phone} copyright={settings?.copyright} />
+      <Footer
+        email={settings?.email}
+        phone={settings?.phone}
+        documents={settings?.footerDocuments ?? []}
+        copyright={settings?.copyright}
+      />
       <ScrollToTop />
     </div>
   );
